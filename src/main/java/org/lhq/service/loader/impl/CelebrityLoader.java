@@ -5,39 +5,38 @@ import jakarta.inject.Singleton;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.lhq.config.DoubanApiConfigProperties;
-import org.lhq.entity.BookInfo;
+import org.lhq.entity.CelebrityInfo;
 import org.lhq.service.loader.EntityLoader;
 import org.lhq.service.perse.HtmlParseProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 @Singleton
-public class BookLoader extends EntityLoader<BookInfo> {
+public class CelebrityLoader extends EntityLoader<List<CelebrityInfo>> {
+    private static final Logger log = LoggerFactory.getLogger(CelebrityLoader.class);
 
-
-    private static final Logger log = LoggerFactory.getLogger(BookLoader.class);
-
-    protected BookLoader(DoubanApiConfigProperties doubanApiConfigProperties) {
+    protected CelebrityLoader(DoubanApiConfigProperties doubanApiConfigProperties) {
         super(doubanApiConfigProperties);
     }
 
     @Override
-    public BookInfo load(HtmlParseProvider<BookInfo> htmlParseProvider, String id) {
-        String url = processUrl(new TypeToken<>() {},id);
-        log.info("load book info from url:{}", url);
+    public List<CelebrityInfo> load(HtmlParseProvider<List<CelebrityInfo>> htmlParseProvider, String id) {
+        TypeToken<List<CelebrityInfo>> typeToken = new TypeToken<>() {};
+        String url = processUrl(typeToken,id);
+        log.info("load celebrity info from url:{}", url);
         try {
             Connection.Response response = Jsoup.connect(url)
                     .referrer(doubanApiConfigProperties.baseUrl())
                     .userAgent(doubanApiConfigProperties.userAgent())
                     .ignoreContentType(true)
                     .execute();
-            String htmlStr = response.body();
-            return htmlParseProvider.parse(url,htmlStr);
+            return htmlParseProvider.parse(url, response.body());
         } catch (IOException e) {
-            log.error("load book info error url:{}", url, e);
-            return null;
+            log.error("load celebrity info error",e);
         }
+        return null;
     }
 }

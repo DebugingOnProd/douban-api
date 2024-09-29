@@ -1,5 +1,6 @@
 package org.lhq.service.loader.impl;
 
+import com.google.common.reflect.TypeToken;
 import jakarta.inject.Singleton;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -23,9 +24,13 @@ public class MovieLoader extends EntityLoader<MovieInfo> {
 
     @Override
     public MovieInfo load(HtmlParseProvider<MovieInfo> htmlParseProvider, String id) {
-        String url = processUrl(MovieInfo.class,id);
+        TypeToken<MovieInfo> typeToken = new TypeToken<>(){};
+        String url = processUrl(typeToken,id);
         try {
-            Connection.Response response = Jsoup.connect(url).execute();
+            Connection.Response response = Jsoup.connect(url)
+                    .referrer(doubanApiConfigProperties.baseUrl())
+                    .userAgent(doubanApiConfigProperties.userAgent())
+                    .execute();
             String htmlStr = response.body();
             return htmlParseProvider.parse(url,htmlStr);
         } catch (IOException e) {

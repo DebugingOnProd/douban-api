@@ -14,6 +14,7 @@ val quarkusPlatformVersion: String by project
 val jsoupVersion: String by project
 val lombokVersion: String by project
 val commonsLang3Version: String by project
+val guavaVersion: String by project
 
 dependencies {
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
@@ -25,6 +26,7 @@ dependencies {
     implementation("org.jsoup:jsoup:${jsoupVersion}")
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
     implementation("org.apache.commons:commons-lang3:${commonsLang3Version}")
+    implementation("com.google.guava:guava:${guavaVersion}")
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     testImplementation("io.quarkus:quarkus-junit5")
 }
