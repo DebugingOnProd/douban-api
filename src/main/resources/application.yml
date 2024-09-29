@@ -1,0 +1,15 @@
+
+douban:
+  api:
+    mappings:
+      book: 1001
+      movie: 1002
+    base-url: https://book.douban.com/
+    search-url: https://www.douban.com/search
+    detail-url: https://book.douban.com/subject/{id}/
+    isbn-url: https://book.douban.com/isbn/{isbn}/
+    movie-detail-url: https://movie.douban.com/subject/{id}/
+    movie-character-url: https://movie.douban.com/subject/{id}/celebrities
+    user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0
+    proxy-image-url: true
+    count: 5
