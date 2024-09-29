@@ -6,7 +6,9 @@
 
 ### 目前已经抓取的接口有
 
-- 书籍详细信息 （/book/{id}）
-- 电影详细信息 （/movie/{id}）
+- 书籍详细信息 (/book/{id})
+- 电影详细信息 (/movie/{id})
+- 图片代理 (/imageProxy/view/cover)
+- 演员详细信息 (/movie/{id}/cast)
 
 > **_提示:_**  Quarkus 现在附带了一个开发 UI，该 UI 仅在开发模式下可用，网址为 <http://localhost:8080/q/dev/>.
