@@ -4,7 +4,7 @@ import jakarta.inject.Singleton;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.lhq.config.DoubanApiConfigProperties;
-import org.lhq.entity.BookInfo;
+import org.lhq.entity.MovieInfo;
 import org.lhq.service.loader.EntityLoader;
 import org.lhq.service.perse.HtmlParseProvider;
 import org.slf4j.Logger;
@@ -13,19 +13,17 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 @Singleton
-public class BookLoader extends EntityLoader<BookInfo> {
+public class MovieLoader extends EntityLoader<MovieInfo> {
 
+    private static final Logger log = LoggerFactory.getLogger(MovieLoader.class);
 
-    private static final Logger log = LoggerFactory.getLogger(BookLoader.class);
-
-    protected BookLoader(DoubanApiConfigProperties doubanApiConfigProperties) {
+    protected MovieLoader(DoubanApiConfigProperties doubanApiConfigProperties) {
         super(doubanApiConfigProperties);
     }
 
     @Override
-    public BookInfo load(HtmlParseProvider<BookInfo> htmlParseProvider, String id) {
-        String url = processUrl(BookInfo.class,id);
-        log.info("load book info from url:{}", url);
+    public MovieInfo load(HtmlParseProvider<MovieInfo> htmlParseProvider, String id) {
+        String url = processUrl(MovieInfo.class,id);
         try {
             Connection.Response response = Jsoup.connect(url).execute();
             String htmlStr = response.body();
