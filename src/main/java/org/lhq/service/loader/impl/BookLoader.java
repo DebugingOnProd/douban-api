@@ -7,14 +7,17 @@ import org.jsoup.Jsoup;
 import org.lhq.config.DoubanApiConfigProperties;
 import org.lhq.entity.BookInfo;
 import org.lhq.service.loader.EntityLoader;
+import org.lhq.service.loader.SearchLoader;
 import org.lhq.service.perse.HtmlParseProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 @Singleton
-public class BookLoader extends EntityLoader<BookInfo> {
+public class BookLoader extends EntityLoader<BookInfo> implements SearchLoader<BookInfo> {
 
 
     private static final Logger log = LoggerFactory.getLogger(BookLoader.class);
@@ -39,5 +42,10 @@ public class BookLoader extends EntityLoader<BookInfo> {
             log.error("load book info error url:{}", url, e);
             return null;
         }
+    }
+
+    @Override
+    public List<BookInfo> search(String keyword) {
+        return Collections.emptyList();
     }
 }

@@ -14,7 +14,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-public abstract class EntityLoader<T>  {
+public abstract class EntityLoader<T> {
 
     protected final CacheService<String, BookInfo> cacheService;
 
@@ -42,4 +42,6 @@ public abstract class EntityLoader<T>  {
         return urlTemplate;
     }
     public abstract T load(HtmlParseProvider<T> htmlParseProvider, String id);
+
+
 }

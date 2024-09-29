@@ -16,11 +16,13 @@ import org.lhq.entity.BookInfo;
 import org.lhq.entity.HostInfo;
 import org.lhq.service.image.ImageProxy;
 import org.lhq.service.loader.EntityLoader;
+import org.lhq.service.loader.SearchLoader;
 import org.lhq.service.perse.HtmlParseProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
+import java.util.List;
 
 @Path("/book")
 public class BookApiController {
@@ -32,10 +34,16 @@ public class BookApiController {
 
     private final ImageProxy<BookInfo> imageProxy;
 
-    public BookApiController(EntityLoader<BookInfo> bookLoader, HtmlParseProvider<BookInfo> htmlParseProvider, ImageProxy<BookInfo> imageProxy) {
+    private final SearchLoader<BookInfo> searchLoader;
+
+    public BookApiController(EntityLoader<BookInfo> bookLoader,
+                             HtmlParseProvider<BookInfo> htmlParseProvider,
+                             ImageProxy<BookInfo> imageProxy,
+                             SearchLoader<BookInfo> searchLoader) {
         this.bookLoader = bookLoader;
         this.htmlParseProvider = htmlParseProvider;
         this.imageProxy = imageProxy;
+        this.searchLoader = searchLoader;
     }
 
     @Context
@@ -51,6 +59,13 @@ public class BookApiController {
         hostInfo.setPort(request.authority().port());
         hostInfo.setScheme(request.scheme());
         return imageProxy.process(bookInfo, hostInfo);
+    }
+
+    @GET
+    @Path("search")
+    @Produces
+    public List<BookInfo> search(String keyword) {
+        return searchLoader.search(keyword);
     }
 
 }
