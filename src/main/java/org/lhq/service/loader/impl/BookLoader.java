@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Singleton
 public class BookLoader extends EntityLoader<BookInfo> implements SearchLoader<BookInfo> {
@@ -30,6 +31,9 @@ public class BookLoader extends EntityLoader<BookInfo> implements SearchLoader<B
     public BookInfo load(HtmlParseProvider<BookInfo> htmlParseProvider, String id) {
         String url = processUrl(new TypeToken<>() {},id);
         log.info("load book info from url:{}", url);
+        if (cacheService.containsKeyAndNotExpired(url)) {
+            return cacheService.get(url);
+        }
         try {
             Connection.Response response = Jsoup.connect(url)
                     .referrer(doubanApiConfigProperties.baseUrl())
@@ -37,7 +41,9 @@ public class BookLoader extends EntityLoader<BookInfo> implements SearchLoader<B
                     .ignoreContentType(true)
                     .execute();
             String htmlStr = response.body();
-            return htmlParseProvider.parse(url,htmlStr);
+            BookInfo bookInfo = htmlParseProvider.parse(url, htmlStr);
+            cacheService.put(url, bookInfo, 10, TimeUnit.MINUTES);
+            return bookInfo;
         } catch (IOException e) {
             log.error("load book info error url:{}", url, e);
             return null;
