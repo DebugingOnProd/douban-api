@@ -7,12 +7,22 @@ plugins {
 repositories {
     mavenCentral()
     mavenLocal()
-    maven {
-        name = "GitHubPackages"
-        url = uri("https://maven.pkg.github.com/octocat/douban-api")
-        credentials {
-            username = System.getenv("GITHUB_ACTOR")
-            password = System.getenv("ACTION_SECRETS")
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/DebugingOnProd/douban-api")
+            credentials {
+                username =  System.getenv("GITHUB_ACTOR")
+                password =  System.getenv("ACTION_SECRETS")
+            }
+        }
+    }
+    publications {
+        register<MavenPublication>("gpr") {
+            from(components["java"])
         }
     }
 }
