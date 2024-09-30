@@ -10,7 +10,6 @@ import org.lhq.entity.CelebrityInfo;
 import org.lhq.entity.MovieInfo;
 import org.lhq.service.perse.HtmlParseProvider;
 
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
