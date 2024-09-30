@@ -1,11 +1,20 @@
 plugins {
     java
     id("io.quarkus")
+    id("maven-publish")
 }
 
 repositories {
     mavenCentral()
     mavenLocal()
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/octocat/douban-api")
+        credentials {
+            username = System.getenv("GITHUB_ACTOR")
+            password = System.getenv("GITHUB_TOKEN")
+        }
+    }
 }
 
 val quarkusPlatformGroupId: String by project
