@@ -4,6 +4,14 @@
 
 ## 使用 Quarkus 和 jsoup 封装的 豆瓣书籍和电影api
 
+
+### 运行环境
+#### Environment
+- jdk 21
+- quarkus 3.15.1
+- jsoup 1.18.1
+- gradle 8.9
+
 ### 目前已经抓取的接口有
 #### Interfaces that have been implemented
 
