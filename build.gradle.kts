@@ -14,6 +14,9 @@ publishing {
         maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/DebugingOnProd/douban-api")
+            authentication {
+                basic(BasicAuthentication)
+            }
             credentials {
                 username =  System.getenv("GITHUB_ACTOR")
                 password =  System.getenv("ACTION_SECRETS")
