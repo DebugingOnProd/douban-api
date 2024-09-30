@@ -12,7 +12,7 @@ repositories {
         url = uri("https://maven.pkg.github.com/octocat/douban-api")
         credentials {
             username = System.getenv("GITHUB_ACTOR")
-            password = System.getenv("GITHUB_TOKEN")
+            password = System.getenv("ACTION_SECRETS")
         }
     }
 }
