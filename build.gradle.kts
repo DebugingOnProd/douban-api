@@ -65,3 +65,6 @@ tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     options.compilerArgs.add("-parameters")
 }
+tasks.withType<GenerateModuleMetadata> {
+    suppressedValidationErrors.add("enforced-platform")
+}
