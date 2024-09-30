@@ -27,10 +27,10 @@ public class HtmlToBookImpl implements HtmlParseProvider<BookInfo> {
     private static final Pattern SERIES_PATTERN = Pattern.compile(".*/series/(\\d+)/?");
     private static final Pattern TAGS_PATTERN = Pattern.compile("criteria = '(.+)'");
     @Override
-    public BookInfo parse(String url, String html) {
+    public BookInfo parse(String url, Document doc) {
         BookInfo bookInfo = new BookInfo();
-        Document doc = Jsoup.parse(html);
         Elements body = doc.select("body");
+        String html = doc.body().html();
         Element content = body.isEmpty() ? null : body.getFirst();
         // 提取书名
         Element titleElement = body.select("[property='v:itemreviewed']").getFirst();

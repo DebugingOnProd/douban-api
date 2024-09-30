@@ -29,9 +29,8 @@ public class HtmlToMovieImpl implements HtmlParseProvider<MovieInfo> {
      * @return MovieInfo
      */
     @Override
-    public MovieInfo parse(String url, String html) {
+    public MovieInfo parse(String url, Document document) {
         log.info("url:{}", url);
-        Document document = Jsoup.parse(html);
         Elements htmlbody = document.select("body");
         Element content = htmlbody.isEmpty() ? null : htmlbody.getFirst();
         String title = document.select("[property='v:itemreviewed']").text(); // title获取方式修改

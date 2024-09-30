@@ -1,6 +1,7 @@
 package org.lhq;
 
 import io.quarkus.test.junit.QuarkusTest;
+import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.Test;
 import org.lhq.entity.BookInfo;
 import org.lhq.service.loader.EntityLoader;
@@ -16,6 +17,6 @@ public class MainTest {
     @Test
     void testHelloEndpoint() {
        HtmlParseProvider<BookInfo> parseProvider = (url, html) -> new BookInfo();
-       log.info("{}",parseProvider.parse("",""));
+       log.info("{}",parseProvider.parse("",new Document("")));
     }
 }

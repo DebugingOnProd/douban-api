@@ -3,6 +3,7 @@ package org.lhq.service.loader.impl;
 import com.google.common.reflect.TypeToken;
 import jakarta.inject.Singleton;
 import org.jsoup.Connection;
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -48,8 +49,8 @@ public class BookLoader extends EntityLoader<BookInfo> implements SearchLoader<B
                     .userAgent(doubanApiConfigProperties.userAgent())
                     .ignoreContentType(true)
                     .execute();
-            String htmlStr = response.body();
-            BookInfo bookInfo = htmlParseProvider.parse(url, htmlStr);
+            Document htmlDoc = response.parse();
+            BookInfo bookInfo = htmlParseProvider.parse(url, htmlDoc);
             cacheService.put(url, bookInfo, 10, TimeUnit.MINUTES);
             return bookInfo;
         } catch (IOException e) {
@@ -79,15 +80,18 @@ public class BookLoader extends EntityLoader<BookInfo> implements SearchLoader<B
                 Map<String, String> map = DoubanUrlUtils.parseQuery(URI.create(href).getQuery());
                 String singleUrl = map.get("url");
                 if (DoubanUrlUtils.isBookUrl(singleUrl) && list.size() < doubanApiConfigProperties.count()) {
+                    log.info("search book info from url:{}", singleUrl);
                     list.add(CompletableFuture.supplyAsync(() -> {
                         try {
-                            Connection.Response singleBookResponse = Jsoup.connect(singleUrl)
+                            Document htmlDocument = Jsoup.connect(singleUrl)
                                     .referrer(doubanApiConfigProperties.baseUrl())
                                     .userAgent(doubanApiConfigProperties.userAgent())
                                     .ignoreContentType(true)
-                                    .execute();
-                            String body = singleBookResponse.body();
-                            return htmlParseProvider.parse(singleUrl, body);
+                                    .get();
+                            return htmlParseProvider.parse(singleUrl, htmlDocument);
+                        } catch (HttpStatusException ex) {
+                            log.warn("http status error :{}", ex.getMessage());
+                            return null;
                         } catch (IOException ex) {
                             log.error("load book info error url:{}", singleUrl, ex);
                             return null;

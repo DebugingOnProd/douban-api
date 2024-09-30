@@ -1,5 +1,7 @@
 package org.lhq.service.perse;
 
+import org.jsoup.nodes.Document;
+
 @FunctionalInterface
 public interface HtmlParseProvider<T> {
     /**
@@ -8,5 +10,5 @@ public interface HtmlParseProvider<T> {
      * @param html
      * @return T
      */
-    T parse(String url,String html);
+    T parse(String url, Document html);
 }

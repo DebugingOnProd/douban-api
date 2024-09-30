@@ -42,8 +42,7 @@ public class MovieLoader extends EntityLoader<MovieInfo> implements SearchLoader
                     .referrer(doubanApiConfigProperties.baseUrl())
                     .userAgent(doubanApiConfigProperties.userAgent())
                     .execute();
-            String htmlStr = response.body();
-            return htmlParseProvider.parse(url,htmlStr);
+            return htmlParseProvider.parse(url,response.parse());
         } catch (IOException e) {
             log.error("load book info error url:{}", url, e);
             return null;
@@ -77,8 +76,7 @@ public class MovieLoader extends EntityLoader<MovieInfo> implements SearchLoader
                                     .userAgent(doubanApiConfigProperties.userAgent())
                                     .ignoreContentType(true)
                                     .execute();
-                            String body = singleResponse.body();
-                            return htmlParseProvider.parse(singleUrl, body);
+                            return htmlParseProvider.parse(singleUrl, singleResponse.parse());
                         } catch (IOException ex) {
                             log.error("load movie info error url:{}", singleUrl, ex);
                             return null;

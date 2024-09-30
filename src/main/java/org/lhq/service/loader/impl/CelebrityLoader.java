@@ -34,7 +34,7 @@ public class CelebrityLoader extends EntityLoader<List<CelebrityInfo>> {
                     .userAgent(doubanApiConfigProperties.userAgent())
                     .ignoreContentType(true)
                     .execute();
-            return htmlParseProvider.parse(url, response.body());
+            return htmlParseProvider.parse(url, response.parse());
         } catch (IOException e) {
             log.error("load celebrity info error",e);
         }
