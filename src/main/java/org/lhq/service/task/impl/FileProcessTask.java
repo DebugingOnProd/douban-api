@@ -1,8 +1,8 @@
-package org.lhq.service.task;
-
+package org.lhq.service.task.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import jakarta.inject.Inject;
 import org.lhq.config.DirConfigProperties;
 import org.lhq.entity.BookInfo;
 import org.lhq.service.loader.EntityLoader;
@@ -21,69 +21,38 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ScanTask implements Runnable{
+public class FileProcessTask implements Runnable{
 
-    private static final Logger log = LoggerFactory.getLogger(ScanTask.class);
 
-    private final SearchLoader<BookInfo> searchLoader;
-    private final HtmlParseProvider<BookInfo> htmlParseProvider;
-    private final DirConfigProperties dirConfigProperties;
-    private final EntityLoader<List<Byte>> imageLoader;
+    private static final Logger log = LoggerFactory.getLogger(FileProcessTask.class);
+    private  final DirConfigProperties dirConfigProperties;
 
-    public ScanTask(SearchLoader<BookInfo> searchLoader,
-                    HtmlParseProvider<BookInfo> htmlParseProvider,
-                    DirConfigProperties dirConfigProperties,
-                    EntityLoader<List<Byte>> imageLoader) {
-        this.searchLoader = searchLoader;
-        this.htmlParseProvider = htmlParseProvider;
+    private final Map<String, File> fileMap;
+
+
+    @Inject
+    EntityLoader<List<Byte>> imageLoader;
+    @Inject
+    SearchLoader<BookInfo> searchLoader;
+    @Inject
+    HtmlParseProvider<BookInfo> htmlParseProvider;
+
+
+
+    public FileProcessTask(DirConfigProperties dirConfigProperties, Map<String, File> fileMap) {
         this.dirConfigProperties = dirConfigProperties;
-        this.imageLoader = imageLoader;
+        this.fileMap = fileMap;
     }
-
 
     /**
      * Runs this operation.
      */
     @Override
     public void run() {
-        String scanDir = dirConfigProperties.autoScanDir();
-        log.info("dir scan start dir:{}", scanDir);
-        File directory = new File(scanDir);
-        if (!directory.exists()|| !directory.isDirectory()) {
-            log.warn("dir scan dir not exists or not directory:{}", scanDir);
-            return;
-        }
-        listFilesRecursively(directory);
-
-    }
-
-    private void listFilesRecursively(File directory) {
-        Map<String,File> fileName = new HashMap<>();
-        File[] files = directory.listFiles();
-        if (files == null){
-            return;
-        }
-        for (File file : files) {
-            if (file.isDirectory()) {
-                listFilesRecursively(file);
-            } else {
-                // Process the file
-                if(isPdfFile(file)){
-                    fileName.put(removeExtension(file.getName()),file);
-                }
-            }
-        }
-
-        moveToNewDir(fileName);
-
-    }
-
-    private void moveToNewDir(Map<String, File> fileName) {
-        for (Map.Entry<String, File> entry : fileName.entrySet()) {
+        for (Map.Entry<String, File> entry : fileMap.entrySet()) {
             String name = entry.getKey();
             File realFile = entry.getValue();
             try {
@@ -105,48 +74,12 @@ public class ScanTask implements Runnable{
                 }
                 File newFile = new File(newFilePathStr);
                 moveFile(realFile, newFile);
-                List<Byte> byteList = imageLoader.load((url, html) -> Collections.emptyList(), bookImageUrl);
-                saveCoverImage(byteList, newFile);
+                saveCoverImage(bookImageUrl, newFile);
                 writeJsonToFile(firstBook, newFile);
             } catch (IOException e) {
                 log.error("file move error",e);
             }
         }
-    }
-
-    private void moveFile(File realFile, File newFile) throws IOException {
-        Path oldFilePath = Paths.get(realFile.getAbsolutePath());
-        Path newFilePath = Paths.get(newFile.getAbsolutePath());
-        Files.move(oldFilePath,newFilePath, StandardCopyOption.REPLACE_EXISTING);
-    }
-
-    private void saveCoverImage(List<Byte> byteList, File newFile) throws IOException {
-        byte[] imageData = new byte[byteList.size()];
-        for (int i = 0; i < byteList.size(); i++) {
-            imageData[i] = byteList.get(i);
-        }
-        // 将 byte[] 转换为 InputStream
-        ByteArrayInputStream bis = new ByteArrayInputStream(imageData);
-        // 读取图片数据到 BufferedImage
-        BufferedImage image = ImageIO.read(bis);
-        File parentFile = newFile.getParentFile();
-        String path = parentFile.getPath();
-        String filePath = path + File.separator + "cover.jpg";
-        // 创建目标文件
-        File output = new File(filePath);
-        // 将 BufferedImage 写入目标文件
-        ImageIO.write(image,getImageFormat(filePath),output);
-    }
-
-    private boolean isPdfFile(File file){
-        return file.getName().toLowerCase().endsWith(".pdf");
-    }
-    private String removeExtension(String fileName) {
-        int dotIndex = fileName.lastIndexOf('.');
-        if (dotIndex == -1) {
-            return fileName;
-        }
-        return fileName.substring(0, dotIndex);
     }
 
     private String getImageFormat(String filePath) {
@@ -175,7 +108,31 @@ public class ScanTask implements Runnable{
             Files.write(Paths.get(filePath), jsonStr.getBytes());
             log.info("write json success {}",filePath);
         } catch (IOException e) {
-           log.error("write json error",e);
+            log.error("write json error",e);
         }
+    }
+    private void saveCoverImage(String bookImageUrl, File newFile) throws IOException {
+        List<Byte> byteList = imageLoader.load((url, html) -> Collections.emptyList(), bookImageUrl);
+        byte[] imageData = new byte[byteList.size()];
+        for (int i = 0; i < byteList.size(); i++) {
+            imageData[i] = byteList.get(i);
+        }
+        // 将 byte[] 转换为 InputStream
+        ByteArrayInputStream bis = new ByteArrayInputStream(imageData);
+        // 读取图片数据到 BufferedImage
+        BufferedImage image = ImageIO.read(bis);
+        File parentFile = newFile.getParentFile();
+        String path = parentFile.getPath();
+        String filePath = path + File.separator + "cover.jpg";
+        // 创建目标文件
+        File output = new File(filePath);
+        // 将 BufferedImage 写入目标文件
+        ImageIO.write(image,getImageFormat(filePath),output);
+    }
+
+    private void moveFile(File realFile, File newFile) throws IOException {
+        Path oldFilePath = Paths.get(realFile.getAbsolutePath());
+        Path newFilePath = Paths.get(newFile.getAbsolutePath());
+        Files.move(oldFilePath,newFilePath, StandardCopyOption.REPLACE_EXISTING);
     }
 }

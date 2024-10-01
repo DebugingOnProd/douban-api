@@ -6,11 +6,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 import org.lhq.config.DirConfigProperties;
 import org.lhq.entity.BookInfo;
-import org.lhq.service.image.ImageProxy;
 import org.lhq.service.loader.EntityLoader;
 import org.lhq.service.loader.SearchLoader;
 import org.lhq.service.perse.HtmlParseProvider;
-import org.lhq.service.task.ScanTask;
+import org.lhq.service.task.impl.FileListeningTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,16 +47,12 @@ public class AppLifecycleBean {
         // 创建一个ScheduledExecutorService实例
 
         // 创建一个Runnable任务
-        Runnable task = new ScanTask(
-                searchLoader,
-                htmlParseProvider,
-                dirConfigProperties,
-                imageLoader);
-
+        //ScanTaskImpl scanTask = new ScanTaskImpl(searchLoader, htmlParseProvider, dirConfigProperties, imageLoader);
+        FileListeningTask fileListeningTask = new FileListeningTask(dirConfigProperties);
         // 安排定时任务
         // 第一个参数是Runnable任务，第二个参数是首次执行的时间（延迟时间），第三个参数是周期时间，第四个参数是时间单位
-        // 每5秒执行一次，首次延迟1秒
-        executor.scheduleAtFixedRate(task, 1, 1000, TimeUnit.SECONDS);
+        executor.schedule(fileListeningTask, 1, TimeUnit.SECONDS);
+
 
 
     }
