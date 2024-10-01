@@ -1,6 +1,8 @@
 package org.lhq.service.task;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.lhq.config.DirConfigProperties;
 import org.lhq.entity.BookInfo;
 import org.lhq.service.loader.EntityLoader;
@@ -33,7 +35,9 @@ public class ScanTask implements Runnable{
     private final EntityLoader<List<Byte>> imageLoader;
 
     public ScanTask(SearchLoader<BookInfo> searchLoader,
-                    HtmlParseProvider<BookInfo> htmlParseProvider, DirConfigProperties dirConfigProperties, EntityLoader<List<Byte>> imageLoader) {
+                    HtmlParseProvider<BookInfo> htmlParseProvider,
+                    DirConfigProperties dirConfigProperties,
+                    EntityLoader<List<Byte>> imageLoader) {
         this.searchLoader = searchLoader;
         this.htmlParseProvider = htmlParseProvider;
         this.dirConfigProperties = dirConfigProperties;
@@ -89,31 +93,34 @@ public class ScanTask implements Runnable{
                 if (bookInfoList.isEmpty()) {
                     continue;
                 }
-                log.info("bookInfoList:{}",bookInfoList);
                 BookInfo firstBook = bookInfoList.getFirst();
                 String author = firstBook.getAuthor().getFirst();
                 String title = firstBook.getTitle();
                 String bookImageUrl = firstBook.getImage();
-                String newFilePathStr =
-                        bookDir + File.separator + author + File.separator + title + File.separator + title + "-" + author + ".pdf";
+                String newFilePathStr = bookDir + File.separator + author + File.separator + title + File.separator + title + "-" + author + ".pdf";
                 File targetDir = new File(bookDir + File.separator + author + File.separator + title);
                 if (!targetDir.exists() && !targetDir.mkdirs()){
                     log.warn("create target dir error {}" , targetDir.getAbsolutePath());
                     return;
                 }
                 File newFile = new File(newFilePathStr);
-                Path oldFilePath = Paths.get(realFile.getAbsolutePath());
-                Path newFilePath = Paths.get(newFile.getAbsolutePath());
-                Files.move(oldFilePath,newFilePath, StandardCopyOption.REPLACE_EXISTING);
+                moveFile(realFile, newFile);
                 List<Byte> byteList = imageLoader.load((url, html) -> Collections.emptyList(), bookImageUrl);
-                saveImage(byteList, newFile);
+                saveCoverImage(byteList, newFile);
+                writeJsonToFile(firstBook, newFile);
             } catch (IOException e) {
                 log.error("file move error",e);
             }
         }
     }
 
-    private void saveImage(List<Byte> byteList, File newFile) throws IOException {
+    private void moveFile(File realFile, File newFile) throws IOException {
+        Path oldFilePath = Paths.get(realFile.getAbsolutePath());
+        Path newFilePath = Paths.get(newFile.getAbsolutePath());
+        Files.move(oldFilePath,newFilePath, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    private void saveCoverImage(List<Byte> byteList, File newFile) throws IOException {
         byte[] imageData = new byte[byteList.size()];
         for (int i = 0; i < byteList.size(); i++) {
             imageData[i] = byteList.get(i);
@@ -155,5 +162,20 @@ public class ScanTask implements Runnable{
             case "gif" -> "gif";
             default -> throw new IllegalArgumentException("不支持的图片格式: " + extension);
         };
+    }
+    private void writeJsonToFile(BookInfo bookInfo, File newFile){
+        File parentFile = newFile.getParentFile();
+        String path = parentFile.getPath();
+        String filePath = path + File.separator + "metadata.json";
+        try {
+            ObjectMapper objectMapper = new ObjectMapper()
+                    .enable(SerializationFeature.INDENT_OUTPUT)
+                    .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+            String jsonStr = objectMapper.writeValueAsString(bookInfo);
+            Files.write(Paths.get(filePath), jsonStr.getBytes());
+            log.info("write json success {}",filePath);
+        } catch (IOException e) {
+           log.error("write json error",e);
+        }
     }
 }
