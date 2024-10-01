@@ -1,5 +1,6 @@
 package org.lhq.service.perse.impl;
 
+import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
@@ -20,6 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Singleton
+@Named("bookParser")
 public class HtmlToBookImpl implements HtmlParseProvider<BookInfo> {
     private static final Logger log = LoggerFactory.getLogger(HtmlToBookImpl.class);
     public static final Pattern ID_PATTERN = Pattern.compile(".*/subject/(\\d+)/?");

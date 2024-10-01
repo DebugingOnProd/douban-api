@@ -1,6 +1,7 @@
 package org.lhq.service.loader.impl;
 
 import com.google.common.reflect.TypeToken;
+import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -25,6 +26,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @Singleton
+@Named("movieLoader")
 public class MovieLoader extends EntityLoader<MovieInfo> implements SearchLoader<MovieInfo> {
 
     private static final Logger log = LoggerFactory.getLogger(MovieLoader.class);

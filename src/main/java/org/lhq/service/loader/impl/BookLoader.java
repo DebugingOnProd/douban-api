@@ -1,6 +1,7 @@
 package org.lhq.service.loader.impl;
 
 import com.google.common.reflect.TypeToken;
+import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.jsoup.Connection;
 import org.jsoup.HttpStatusException;
@@ -14,6 +15,8 @@ import org.lhq.service.loader.EntityLoader;
 import org.lhq.service.loader.SearchLoader;
 import org.lhq.service.perse.HtmlParseProvider;
 import org.lhq.service.utils.DoubanUrlUtils;
+import org.lhq.service.utils.ThreadPoolType;
+import org.lhq.service.utils.ThreadPoolUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,9 +27,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
+@Named("bookLoader")
 public class BookLoader extends EntityLoader<BookInfo> implements SearchLoader<BookInfo> {
 
 
@@ -75,6 +80,7 @@ public class BookLoader extends EntityLoader<BookInfo> implements SearchLoader<B
             Document document = Jsoup.parse(htmlStr);
             Elements elements = document.select("a.nbg");
             List<CompletableFuture<BookInfo>> list = new ArrayList<>();
+            ThreadPoolExecutor executor = ThreadPoolUtil.getExecutor(ThreadPoolType.FIXED_THREAD);
             for (Element element : elements) {
                 String href = element.attr("href");
                 Map<String, String> map = DoubanUrlUtils.parseQuery(URI.create(href).getQuery());
@@ -96,7 +102,7 @@ public class BookLoader extends EntityLoader<BookInfo> implements SearchLoader<B
                             log.error("load book info error url:{}", singleUrl, ex);
                             return null;
                         }
-                    }));
+                    }, executor));
                 }
             }
             return list.stream().map(CompletableFuture::join).toList();

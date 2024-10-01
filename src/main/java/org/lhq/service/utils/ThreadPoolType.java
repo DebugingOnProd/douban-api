@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 public enum ThreadPoolType {
 
 
-    FIXED_THREAD(5, 5, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100));
+    FIXED_THREAD(2, 5, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100));
 
 
     private final int corePoolSize;

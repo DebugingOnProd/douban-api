@@ -1,5 +1,6 @@
 package org.lhq.service.loader.impl;
 
+import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -14,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Singleton
+@Named("imageLoader")
 public class ImageLoader extends EntityLoader<List<Byte>> {
     private static final Logger log = LoggerFactory.getLogger(ImageLoader.class);
 
