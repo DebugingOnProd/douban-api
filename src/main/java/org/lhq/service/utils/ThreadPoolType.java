@@ -8,7 +8,11 @@ import java.util.concurrent.TimeUnit;
 public enum ThreadPoolType {
 
 
-    FIXED_THREAD(2, 5, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100));
+    FIXED_THREAD(2,
+            5,
+            60,
+            TimeUnit.SECONDS,
+            new LinkedBlockingQueue<>(100));
 
 
     private final int corePoolSize;
@@ -17,7 +21,11 @@ public enum ThreadPoolType {
     private final TimeUnit timeUnit;
     private final BlockingQueue<Runnable> workQueue;
 
-    ThreadPoolType(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit timeUnit, BlockingQueue<Runnable> workQueue) {
+    ThreadPoolType(int corePoolSize,
+                   int maximumPoolSize,
+                   long keepAliveTime,
+                   TimeUnit timeUnit,
+                   BlockingQueue<Runnable> workQueue) {
         this.corePoolSize = corePoolSize;
         this.maximumPoolSize = maximumPoolSize;
         this.keepAliveTime = keepAliveTime;
