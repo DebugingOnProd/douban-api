@@ -17,12 +17,12 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-public class FileListeningTask extends FileListening {
+public class BookFileListeningTask extends FileListening {
 
-    private static final Logger log = LoggerFactory.getLogger(FileListeningTask.class);
+    private static final Logger log = LoggerFactory.getLogger(BookFileListeningTask.class);
 
-    public FileListeningTask(BeanUtils beanUtils,
-                                DirConfigProperties dirConfigProperties) {
+    public BookFileListeningTask(BeanUtils beanUtils,
+                                 DirConfigProperties dirConfigProperties) {
         super(beanUtils, dirConfigProperties);
     }
 
@@ -49,5 +49,18 @@ public class FileListeningTask extends FileListening {
                     fileProcess );
         });
     }
+
+    @Override
+    protected boolean isNeedFileExt(File file) {
+        String[] ebookExtensions = getDirConfiguration().ebookExtensions();
+        for (String extension : ebookExtensions) {
+            if (file.getName().toLowerCase().endsWith(extension)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 
 }

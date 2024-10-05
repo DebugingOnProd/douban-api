@@ -6,7 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 import org.lhq.config.DirConfigProperties;
 import org.lhq.service.task.FileListening;
-import org.lhq.service.task.impl.FileListeningTask;
+import org.lhq.service.task.impl.BookFileListeningTask;
 import org.lhq.service.utils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +43,7 @@ public class AppLifecycleBean {
         // 创建一个ScheduledExecutorService实例
 
         // 创建一个Runnable任务
-        FileListening fileListeningTask = new FileListeningTask(beanUtils,dirConfigProperties);
+        FileListening fileListeningTask = new BookFileListeningTask(beanUtils,dirConfigProperties);
         // 安排定时任务
         // 第一个参数是Runnable任务，第二个参数是首次执行的时间（延迟时间），第三个参数是周期时间，第四个参数是时间单位
         executor.schedule(fileListeningTask, 5, TimeUnit.SECONDS);

@@ -19,3 +19,4 @@ dir:
   auto-scan-interval: 30
   book-dir: E:/ai/
   movie-dir: E:/迅雷下载/
+  ebook-extensions: [pdf, epub, mobi, txt]

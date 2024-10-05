@@ -58,8 +58,8 @@ public abstract class FileListening implements Runnable{
             if (file.isDirectory()) {
                 listFilesRecursively(file, fileName);
             } else {
-                // Process the file
-                if(isPdfFile(file)){
+                // Process the file extension
+                if(isNeedFileExt(file)){
                     fileName.put(removeExtension(file.getName()),file);
                 }
             }
@@ -75,7 +75,9 @@ public abstract class FileListening implements Runnable{
         return fileName.substring(0, dotIndex);
     }
 
-    private boolean isPdfFile(File file){
-        return file.getName().toLowerCase().endsWith(".pdf");
+    protected abstract boolean isNeedFileExt(File file);
+
+    protected DirConfigProperties getDirConfiguration() {
+        return dirConfigProperties;
     }
 }

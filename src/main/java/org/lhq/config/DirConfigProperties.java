@@ -8,4 +8,5 @@ public interface DirConfigProperties {
     Integer autoScanInterval();
     String bookDir();
     String movieDir();
+    String[] ebookExtensions();
 }
