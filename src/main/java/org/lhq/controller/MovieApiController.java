@@ -2,7 +2,6 @@ package org.lhq.controller;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
-import org.lhq.entity.BookInfo;
 import org.lhq.entity.CelebrityInfo;
 import org.lhq.entity.MovieInfo;
 import org.lhq.service.loader.EntityLoader;

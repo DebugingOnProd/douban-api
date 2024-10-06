@@ -13,6 +13,7 @@ public interface DoubanApiConfigProperties {
     String isbnUrl();
     String movieDetailUrl();
     String movieCharacterUrl();
+    String personDetailUrl();
     String userAgent();
     boolean proxyImageUrl();
     int count();

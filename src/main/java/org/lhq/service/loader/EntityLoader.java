@@ -8,6 +8,7 @@ import org.lhq.config.DoubanApiConfigProperties;
 import org.lhq.entity.BookInfo;
 import org.lhq.entity.CelebrityInfo;
 import org.lhq.entity.MovieInfo;
+import org.lhq.entity.PersonageInfo;
 import org.lhq.service.perse.HtmlParseProvider;
 
 import java.util.List;
@@ -30,7 +31,8 @@ public abstract class EntityLoader<T> {
         this.urlMap = Map.of(
                 new TypeToken<BookInfo> () {} ,doubanApiConfigProperties.detailUrl(),
                 new TypeToken<MovieInfo> () {} ,doubanApiConfigProperties.movieDetailUrl(),
-                new TypeToken<List<CelebrityInfo>> () {},doubanApiConfigProperties.movieCharacterUrl()
+                new TypeToken<List<CelebrityInfo>> () {},doubanApiConfigProperties.movieCharacterUrl(),
+                new TypeToken<PersonageInfo>(){},doubanApiConfigProperties.personDetailUrl()
         );
     }
 

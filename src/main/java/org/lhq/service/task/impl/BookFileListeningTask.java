@@ -52,7 +52,7 @@ public class BookFileListeningTask extends FileListening {
 
     @Override
     protected boolean isNeedFileExt(File file) {
-        String[] ebookExtensions = getDirConfiguration().ebookExtensions();
+        List<String> ebookExtensions = getDirConfiguration().ebookExtensions();
         for (String extension : ebookExtensions) {
             if (file.getName().toLowerCase().endsWith(extension)) {
                 return true;
