@@ -72,8 +72,10 @@ public class HtmlToPersonImpl implements HtmlParseProvider<PersonageInfo> {
                         break;
                     case "IMDb编号:":
                         personageInfo.setImdbId(value);
+                        break;
                     case "职业:":
                         personageInfo.setOccupation(value);
+                        break;
                     default:
                         break;
                 }

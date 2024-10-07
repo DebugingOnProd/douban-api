@@ -16,6 +16,7 @@ val lombokVersion: String by project
 val commonsLang3Version: String by project
 val guavaVersion: String by project
 val quarkusLoggingLogbackVersion: String by project
+val jacksonDateFormatVersion: String by project
 
 dependencies {
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
@@ -30,6 +31,7 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:${commonsLang3Version}")
     implementation("com.google.guava:guava:${guavaVersion}")
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${jacksonDateFormatVersion}")
     testImplementation("io.quarkus:quarkus-junit5")
 }
 
