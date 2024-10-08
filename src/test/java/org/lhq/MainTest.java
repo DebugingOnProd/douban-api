@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 
 @QuarkusTest
-public class MainTest {
+class MainTest {
     private static final Logger log = LoggerFactory.getLogger(MainTest.class);
 
     @Test
