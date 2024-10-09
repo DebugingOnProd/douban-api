@@ -1,7 +1,7 @@
-package org.lhq.service.task.impl;
+package org.lhq.service.gen.impl;
 
 import org.lhq.entity.BookInfo;
-import org.lhq.service.task.Gen;
+import org.lhq.service.gen.Gen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

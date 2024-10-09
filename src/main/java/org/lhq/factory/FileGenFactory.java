@@ -1,13 +1,11 @@
 package org.lhq.factory;
 
 import org.lhq.entity.BookInfo;
-import org.lhq.service.task.Gen;
-import org.lhq.service.task.impl.GenJson;
-import org.lhq.service.task.impl.GenXml;
+import org.lhq.service.gen.Gen;
+import org.lhq.service.gen.impl.GenJson;
+import org.lhq.service.gen.impl.GenXml;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
 
 public class FileGenFactory {
 

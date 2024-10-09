@@ -9,7 +9,7 @@ import org.lhq.service.loader.EntityLoader;
 import org.lhq.service.loader.SearchLoader;
 import org.lhq.service.perse.HtmlParseProvider;
 import org.lhq.service.task.FileProcess;
-import org.lhq.service.task.Gen;
+import org.lhq.service.gen.Gen;
 import org.lhq.service.utils.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
