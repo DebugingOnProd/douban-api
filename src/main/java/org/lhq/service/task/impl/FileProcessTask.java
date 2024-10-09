@@ -25,6 +25,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class FileProcessTask extends FileProcess<BookInfo> {
 
@@ -55,11 +56,12 @@ public class FileProcessTask extends FileProcess<BookInfo> {
             String bookDir = dirConfigProperties.bookDir();
             List<BookInfo> bookInfoList = searchLoader.search(htmlParseProvider, fileName);
             if (bookInfoList.isEmpty()) {
+                log.info("search book info isEmpty {}", bookInfoList);
                 return;
             }
             BookInfo firstBook = bookInfoList.getFirst();
             String author = firstBook.getAuthor().getFirst();
-            String title = firstBook.getTitle();
+            String title = Optional.of(firstBook.getTitle()).orElse("");
             String bookImageUrl = firstBook.getImage();
             String newFilePathStr = bookDir + File.separator + author + File.separator + title + File.separator + title + "-" + author + ".pdf";
             File targetDir = new File(bookDir + File.separator + author + File.separator + title);

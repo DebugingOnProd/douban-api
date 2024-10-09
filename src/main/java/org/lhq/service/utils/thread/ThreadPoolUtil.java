@@ -1,8 +1,13 @@
-package org.lhq.service.utils;
+package org.lhq.service.utils.thread;
 
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 
+@Slf4j
 public class ThreadPoolUtil {
     private static final ConcurrentHashMap<ThreadPoolType, ThreadPoolExecutor> executorMap = new ConcurrentHashMap<>();
 
@@ -14,7 +19,7 @@ public class ThreadPoolUtil {
      * @return 线程池
      */
     public static ThreadPoolExecutor getExecutor(ThreadPoolType type) {
-        return executorMap.computeIfAbsent(type, t -> t.createThreadPool());
+        return executorMap.computeIfAbsent(type, ThreadPoolType::createThreadPool);
     }
 
     /**
@@ -24,7 +29,20 @@ public class ThreadPoolUtil {
      */
     public static void execute(ThreadPoolType type, Runnable task) {
         ThreadPoolExecutor pool = getExecutor(type);
+        int poolSize = pool.getPoolSize();
+        log.info("the current pool size:{}" , poolSize);
+        log.info("the current task queue size:{}" , pool.getQueue().size());
         pool.execute(task);
+    }
+
+
+
+    public static <T> Future<T> submit(ThreadPoolType type, Callable<T> task){
+        ThreadPoolExecutor pool = getExecutor(type);
+        int poolSize = pool.getPoolSize();
+        log.info("the current pool size:{}" , poolSize);
+        log.info("the current task queue size:{}" , pool.getQueue().size());
+        return pool.submit(task);
     }
 
     /**

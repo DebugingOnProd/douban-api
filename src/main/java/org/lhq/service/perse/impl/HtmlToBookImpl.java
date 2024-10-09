@@ -29,6 +29,7 @@ public class HtmlToBookImpl implements HtmlParseProvider<BookInfo> {
     private static final Pattern TAGS_PATTERN = Pattern.compile("criteria = '(.+)'");
     @Override
     public BookInfo parse(String url, Document doc) {
+        log.info("parse book info from url:{}", url);
         BookInfo bookInfo = new BookInfo();
         Elements body = doc.select("body");
         String html = doc.body().html();

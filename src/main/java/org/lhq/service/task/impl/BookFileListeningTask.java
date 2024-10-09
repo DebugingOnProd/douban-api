@@ -8,8 +8,8 @@ import org.lhq.service.perse.HtmlParseProvider;
 import org.lhq.service.task.FileListening;
 import org.lhq.service.task.FileProcess;
 import org.lhq.service.utils.BeanUtils;
-import org.lhq.service.utils.ThreadPoolType;
-import org.lhq.service.utils.ThreadPoolUtil;
+import org.lhq.service.utils.thread.ThreadPoolType;
+import org.lhq.service.utils.thread.ThreadPoolUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +45,7 @@ public class BookFileListeningTask extends FileListening {
                     searchLoader,
                     dirConfigProperties);
             ThreadPoolUtil.execute(
-                    ThreadPoolType.FIXED_THREAD,
+                    ThreadPoolType.FILE_SCAN_THREAD,
                     fileProcess );
         });
     }

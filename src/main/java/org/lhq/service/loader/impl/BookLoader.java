@@ -4,7 +4,6 @@ import com.google.common.reflect.TypeToken;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.jsoup.Connection;
-import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -15,20 +14,17 @@ import org.lhq.service.loader.EntityLoader;
 import org.lhq.service.loader.SearchLoader;
 import org.lhq.service.perse.HtmlParseProvider;
 import org.lhq.service.utils.DoubanUrlUtils;
-import org.lhq.service.utils.ThreadPoolType;
-import org.lhq.service.utils.ThreadPoolUtil;
+import org.lhq.service.utils.thread.ThreadPoolType;
+import org.lhq.service.utils.thread.ThreadPoolUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @Singleton
 @Named("bookLoader")
@@ -43,7 +39,8 @@ public class BookLoader extends EntityLoader<BookInfo> implements SearchLoader<B
 
     @Override
     public BookInfo load(HtmlParseProvider<BookInfo> htmlParseProvider, String id) {
-        String url = processUrl(new TypeToken<>() {},id);
+        String url = processUrl(new TypeToken<>() {
+        }, id);
         log.info("load book info from url:{}", url);
         if (cacheService.containsKeyAndNotExpired(url)) {
             return cacheService.get(url);
@@ -65,11 +62,12 @@ public class BookLoader extends EntityLoader<BookInfo> implements SearchLoader<B
     }
 
     @Override
-    public List<BookInfo> search(HtmlParseProvider<BookInfo> htmlParseProvider,String keyword) {
+    public List<BookInfo> search(HtmlParseProvider<BookInfo> htmlParseProvider, String keyword) {
         Map<String, String> searchMap = doubanApiConfigProperties.mappings();
         String bookCat = searchMap.get("book");
         String url = doubanApiConfigProperties.searchUrl() + "?cat=" + bookCat + "&q=" + keyword;
         log.info("search book info from url:{}", url);
+        List<Future<BookInfo>> list = new ArrayList<>();
         try {
             Connection.Response response = Jsoup.connect(url)
                     .referrer(doubanApiConfigProperties.baseUrl())
@@ -79,36 +77,36 @@ public class BookLoader extends EntityLoader<BookInfo> implements SearchLoader<B
             String htmlStr = response.body();
             Document document = Jsoup.parse(htmlStr);
             Elements elements = document.select("a.nbg");
-            List<CompletableFuture<BookInfo>> list = new ArrayList<>();
-            ThreadPoolExecutor executor = ThreadPoolUtil.getExecutor(ThreadPoolType.FIXED_THREAD);
             for (Element element : elements) {
                 String href = element.attr("href");
                 Map<String, String> map = DoubanUrlUtils.parseQuery(URI.create(href).getQuery());
                 String singleUrl = map.get("url");
                 if (DoubanUrlUtils.isBookUrl(singleUrl) && list.size() < doubanApiConfigProperties.count()) {
                     log.info("search book info from url:{}", singleUrl);
-                    list.add(CompletableFuture.supplyAsync(() -> {
-                        try {
-                            Document htmlDocument = Jsoup.connect(singleUrl)
-                                    .referrer(doubanApiConfigProperties.baseUrl())
-                                    .userAgent(doubanApiConfigProperties.userAgent())
-                                    .ignoreContentType(true)
-                                    .get();
-                            return htmlParseProvider.parse(singleUrl, htmlDocument);
-                        } catch (HttpStatusException ex) {
-                            log.warn("http status error :{}", ex.getMessage());
-                            return null;
-                        } catch (IOException ex) {
-                            log.error("load book info error url:{}", singleUrl, ex);
-                            return null;
-                        }
-                    }, executor));
+                    Future<BookInfo> bookInfoFutureTask = ThreadPoolUtil.submit(ThreadPoolType.NETWORK_REQUEST_THREAD, () -> {
+                        Document htmlDocument = Jsoup.connect(singleUrl)
+                                .referrer(doubanApiConfigProperties.baseUrl())
+                                .userAgent(doubanApiConfigProperties.userAgent())
+                                .ignoreContentType(true)
+                                .execute()
+                                .parse();
+                        return htmlParseProvider.parse(singleUrl, htmlDocument);
+                    });
+                    list.add(bookInfoFutureTask);
                 }
             }
-            return list.stream().map(CompletableFuture::join).toList();
         } catch (IOException e) {
             log.error("search book info error url:{}", url, e);
-            return Collections.emptyList();
         }
+        List<BookInfo> resultList = list.stream().map(item -> {
+            try {
+                return item.get();
+            } catch (InterruptedException | ExecutionException e) {
+                log.warn("search book info error", e);
+                return new BookInfo();
+            }
+        }).toList();
+        log.info("book info size:{}", resultList.size());
+        return resultList;
     }
 }
