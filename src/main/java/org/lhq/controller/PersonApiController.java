@@ -12,14 +12,14 @@ import org.lhq.service.perse.HtmlParseProvider;
 
 @Path("/person")
 @Consumes(MediaType.APPLICATION_JSON)
-public class PersonController {
+public class PersonApiController {
 
 
     private final HtmlParseProvider<PersonageInfo> htmlParseProvider;
 
     private final EntityLoader<PersonageInfo> personLoader;
 
-    public PersonController(HtmlParseProvider<PersonageInfo> htmlParseProvider,
+    public PersonApiController(HtmlParseProvider<PersonageInfo> htmlParseProvider,
                             EntityLoader<PersonageInfo> personLoader) {
         this.htmlParseProvider = htmlParseProvider;
         this.personLoader = personLoader;

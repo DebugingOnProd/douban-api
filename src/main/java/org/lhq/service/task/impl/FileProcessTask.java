@@ -4,10 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.lhq.config.DirConfigProperties;
 import org.lhq.entity.BookInfo;
+import org.lhq.factory.FileGenFactory;
 import org.lhq.service.loader.EntityLoader;
 import org.lhq.service.loader.SearchLoader;
 import org.lhq.service.perse.HtmlParseProvider;
 import org.lhq.service.task.FileProcess;
+import org.lhq.service.task.Gen;
+import org.lhq.service.utils.CommonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,6 +71,8 @@ public class FileProcessTask extends FileProcess<BookInfo> {
             moveFile(taskFile, newFile);
             saveCoverImage(bookImageUrl, newFile);
             writeJsonToFile(firstBook, newFile);
+            Gen<BookInfo> jsonGen = FileGenFactory.getFileGen("json");
+            jsonGen.genFile(firstBook, newFile);
         } catch (IOException e) {
             log.error("file move error", e);
         }
@@ -106,10 +111,7 @@ public class FileProcessTask extends FileProcess<BookInfo> {
 
     private void saveCoverImage(String bookImageUrl, File newFile) throws IOException {
         List<Byte> byteList = imageLoader.load((url, html) -> Collections.emptyList(), bookImageUrl);
-        byte[] imageData = new byte[byteList.size()];
-        for (int i = 0; i < byteList.size(); i++) {
-            imageData[i] = byteList.get(i);
-        }
+        byte[] imageData = CommonUtils.byteArrayTran(byteList);
         // 将 byte[] 转换为 InputStream
         ByteArrayInputStream bis = new ByteArrayInputStream(imageData);
         // 读取图片数据到 BufferedImage

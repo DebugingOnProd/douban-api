@@ -9,7 +9,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class FileListening implements Runnable{
+public abstract class FileListening implements Runnable {
 
     private static final Logger log = LoggerFactory.getLogger(FileListening.class);
     private final BeanUtils beanUtils;

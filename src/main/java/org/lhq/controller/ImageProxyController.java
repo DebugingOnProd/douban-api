@@ -5,6 +5,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import org.lhq.service.loader.EntityLoader;
+import org.lhq.service.utils.CommonUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,10 +25,6 @@ public class ImageProxyController {
     @Produces({"image/jpeg"})
     public byte[] getImage(@QueryParam("cover") String cover) {
         List<Byte> imageByteList = imageLoader.load((url, html)-> Collections.emptyList(),cover);
-        byte[] byteArray = new byte[imageByteList.size()];
-        for (int i = 0; i < imageByteList.size(); i++) {
-            byteArray[i] = imageByteList.get(i);
-        }
-        return byteArray;
+        return CommonUtils.byteArrayTran(imageByteList);
     }
 }
