@@ -61,7 +61,8 @@ public class FileProcessTask extends FileProcess<BookInfo> {
             return;
         }
         BookInfo firstBook = bookInfoList.getFirst();
-        String author = firstBook.getAuthor().getFirst();
+        List<String> authorList = Optional.ofNullable(firstBook.getAuthor()).orElse(Collections.singletonList(""));
+        String author = Optional.ofNullable(authorList.getFirst()).orElse("");
         String title = Optional.of(firstBook.getTitle()).orElse("");
         String bookImageUrl = firstBook.getImage();
         String newFilePathStr = bookDir + File.separator + author + File.separator + title + File.separator + title + "-" + author + ".pdf";
