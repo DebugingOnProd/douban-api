@@ -127,7 +127,7 @@ public class FileProcessTask extends FileProcess<BookInfo> {
         // 将 BufferedImage 写入目标文件
         ImageIO.write(image, getImageFormat(filePath), output);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            log.error("save cover image error", e);
         }
     }
 
