@@ -4,7 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.lhq.config.DirConfigProperties;
-import org.lhq.entity.BookInfo;
+import org.lhq.entity.book.BookInfo;
 import org.lhq.entity.MovieInfo;
 import org.lhq.service.loader.EntityLoader;
 import org.lhq.service.loader.SearchLoader;

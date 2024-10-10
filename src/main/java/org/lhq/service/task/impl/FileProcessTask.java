@@ -3,7 +3,7 @@ package org.lhq.service.task.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.lhq.config.DirConfigProperties;
-import org.lhq.entity.BookInfo;
+import org.lhq.entity.book.BookInfo;
 import org.lhq.factory.FileGenFactory;
 import org.lhq.service.loader.EntityLoader;
 import org.lhq.service.loader.SearchLoader;

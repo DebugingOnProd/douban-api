@@ -31,7 +31,7 @@ public abstract class FileListening implements Runnable {
      */
     @Override
     public void run() {
-        String scanDir = dirConfigProperties.autoScanDir();
+        String scanDir = getScanDirs();
         log.info("dir scan start dir:{}", scanDir);
         File directory = new File(scanDir);
         if (!directory.exists()|| !directory.isDirectory()) {
@@ -80,4 +80,7 @@ public abstract class FileListening implements Runnable {
     protected DirConfigProperties getDirConfiguration() {
         return dirConfigProperties;
     }
+
+
+    protected abstract String getScanDirs();
 }

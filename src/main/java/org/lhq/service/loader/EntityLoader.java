@@ -5,7 +5,7 @@ import jakarta.inject.Inject;
 import org.lhq.cache.CacheEnum;
 import org.lhq.cache.CacheService;
 import org.lhq.config.DoubanApiConfigProperties;
-import org.lhq.entity.BookInfo;
+import org.lhq.entity.book.BookInfo;
 import org.lhq.entity.CelebrityInfo;
 import org.lhq.entity.MovieInfo;
 import org.lhq.entity.PersonageInfo;

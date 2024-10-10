@@ -9,7 +9,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
-import org.lhq.entity.BookInfo;
+import org.lhq.entity.book.BookInfo;
 import org.lhq.entity.HostInfo;
 import org.lhq.service.image.ImageProxy;
 import org.lhq.service.loader.EntityLoader;
@@ -62,5 +62,6 @@ public class BookApiController {
     public List<BookInfo> search(@QueryParam("keyword") String keyword) {
         return searchLoader.search(htmlParseProvider,keyword);
     }
+
 
 }

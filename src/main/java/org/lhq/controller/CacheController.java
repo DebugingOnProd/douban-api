@@ -7,7 +7,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import org.lhq.cache.CacheEnum;
 import org.lhq.cache.CacheService;
-import org.lhq.entity.BookInfo;
+import org.lhq.entity.book.BookInfo;
 
 @Path("/cache")
 public class CacheController {

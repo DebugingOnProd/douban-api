@@ -1,7 +1,7 @@
 package org.lhq.service.task.impl;
 
 import org.lhq.config.DirConfigProperties;
-import org.lhq.entity.BookInfo;
+import org.lhq.entity.book.BookInfo;
 import org.lhq.service.loader.EntityLoader;
 import org.lhq.service.loader.SearchLoader;
 import org.lhq.service.perse.HtmlParseProvider;
@@ -61,6 +61,10 @@ public class BookFileListeningTask extends FileListening {
         return false;
     }
 
+    @Override
+    protected String getScanDirs() {
+        return getDirConfiguration().autoScanDir();
+    }
 
 
 }

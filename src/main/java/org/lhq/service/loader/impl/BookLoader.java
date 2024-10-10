@@ -9,7 +9,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.lhq.config.DoubanApiConfigProperties;
-import org.lhq.entity.BookInfo;
+import org.lhq.entity.book.BookInfo;
 import org.lhq.service.loader.EntityLoader;
 import org.lhq.service.loader.SearchLoader;
 import org.lhq.service.perse.HtmlParseProvider;

@@ -1,6 +1,6 @@
 package org.lhq.factory;
 
-import org.lhq.entity.BookInfo;
+import org.lhq.entity.book.BookInfo;
 import org.lhq.service.gen.Gen;
 import org.lhq.service.gen.impl.GenJson;
 import org.lhq.service.gen.impl.GenXml;

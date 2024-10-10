@@ -1,4 +1,4 @@
-package org.lhq.entity;
+package org.lhq.entity.book;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

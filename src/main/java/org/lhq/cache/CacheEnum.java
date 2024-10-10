@@ -1,7 +1,7 @@
 package org.lhq.cache;
 
 
-import org.lhq.entity.BookInfo;
+import org.lhq.entity.book.BookInfo;
 
 public enum CacheEnum {
     INSTANCE;

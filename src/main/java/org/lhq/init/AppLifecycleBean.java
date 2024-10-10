@@ -7,6 +7,7 @@ import jakarta.enterprise.event.Observes;
 import org.lhq.config.DirConfigProperties;
 import org.lhq.service.task.FileListening;
 import org.lhq.service.task.impl.BookFileListeningTask;
+import org.lhq.service.task.impl.CategorizedBookListening;
 import org.lhq.service.utils.BeanUtils;
 import org.lhq.service.utils.thread.ThreadPoolType;
 import org.lhq.service.utils.thread.ThreadPoolUtil;
@@ -47,10 +48,16 @@ public class AppLifecycleBean {
 
         // 创建一个Runnable任务
         FileListening fileListeningTask = new BookFileListeningTask(beanUtils,dirConfigProperties);
+        FileListening categorizedBookListeningTask = new CategorizedBookListening(beanUtils, dirConfigProperties);
         // 安排定时任务
         // 第一个参数是Runnable任务，第二个参数是首次执行的时间（延迟时间），第三个参数是周期时间，第四个参数是时间单位
-        executor.schedule(fileListeningTask, 5, TimeUnit.SECONDS);
-        executor.scheduleAtFixedRate(()->{
+        //executor.schedule(fileListeningTask, 5, TimeUnit.SECONDS);
+        executor.schedule(categorizedBookListeningTask, 10, TimeUnit.SECONDS);
+
+
+
+
+      /*  executor.scheduleAtFixedRate(()->{
             LOGGER.info("The application is running...");
             ThreadPoolExecutor poolExecutor = ThreadPoolUtil.getExecutor(ThreadPoolType.FILE_RW_THREAD);
             LOGGER.info("The current pool size: {}", poolExecutor.getPoolSize());
@@ -60,7 +67,7 @@ public class AppLifecycleBean {
             LOGGER.info("The current largest pool size: {}", poolExecutor.getLargestPoolSize());
             LOGGER.info("The current task count: {}", poolExecutor.getTaskCount());
             LOGGER.info("---------------------------");
-        }, 0, 1, TimeUnit.SECONDS);
+        }, 0, 1, TimeUnit.SECONDS);*/
 
 
 
