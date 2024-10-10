@@ -5,7 +5,7 @@ import java.util.concurrent.*;
 public enum ThreadPoolType {
 
 
-    FILE_SCAN_THREAD(1,
+    FILE_RW_THREAD(1,
             3,
             60,
             TimeUnit.SECONDS,

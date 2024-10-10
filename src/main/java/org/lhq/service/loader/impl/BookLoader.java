@@ -88,8 +88,7 @@ public class BookLoader extends EntityLoader<BookInfo> implements SearchLoader<B
                                 .referrer(doubanApiConfigProperties.baseUrl())
                                 .userAgent(doubanApiConfigProperties.userAgent())
                                 .ignoreContentType(true)
-                                .execute()
-                                .parse();
+                                .get();
                         return htmlParseProvider.parse(singleUrl, htmlDocument);
                     });
                     list.add(bookInfoFutureTask);

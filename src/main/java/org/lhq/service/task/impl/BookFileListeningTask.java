@@ -45,7 +45,7 @@ public class BookFileListeningTask extends FileListening {
                     searchLoader,
                     dirConfigProperties);
             ThreadPoolUtil.execute(
-                    ThreadPoolType.FILE_SCAN_THREAD,
+                    ThreadPoolType.FILE_RW_THREAD,
                     fileProcess );
         });
     }

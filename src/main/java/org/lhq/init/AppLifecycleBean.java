@@ -52,7 +52,7 @@ public class AppLifecycleBean {
         executor.schedule(fileListeningTask, 5, TimeUnit.SECONDS);
         executor.scheduleAtFixedRate(()->{
             LOGGER.info("The application is running...");
-            ThreadPoolExecutor poolExecutor = ThreadPoolUtil.getExecutor(ThreadPoolType.FILE_SCAN_THREAD);
+            ThreadPoolExecutor poolExecutor = ThreadPoolUtil.getExecutor(ThreadPoolType.FILE_RW_THREAD);
             LOGGER.info("The current pool size: {}", poolExecutor.getPoolSize());
             LOGGER.info("The current task queue size: {}", poolExecutor.getQueue().size());
             LOGGER.info("The current active threads: {}", poolExecutor.getActiveCount());

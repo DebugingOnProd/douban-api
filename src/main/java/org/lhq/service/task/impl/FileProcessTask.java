@@ -11,6 +11,8 @@ import org.lhq.service.perse.HtmlParseProvider;
 import org.lhq.service.task.FileProcess;
 import org.lhq.service.gen.Gen;
 import org.lhq.service.utils.CommonUtils;
+import org.lhq.service.utils.thread.ThreadPoolType;
+import org.lhq.service.utils.thread.ThreadPoolUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,32 +54,30 @@ public class FileProcessTask extends FileProcess<BookInfo> {
 
     @Override
     public void process(String fileName, File taskFile) {
-        try {
-            String bookDir = dirConfigProperties.bookDir();
-            List<BookInfo> bookInfoList = searchLoader.search(htmlParseProvider, fileName);
-            if (bookInfoList.isEmpty()) {
-                log.info("search book info isEmpty {}", bookInfoList);
-                return;
-            }
-            BookInfo firstBook = bookInfoList.getFirst();
-            String author = firstBook.getAuthor().getFirst();
-            String title = Optional.of(firstBook.getTitle()).orElse("");
-            String bookImageUrl = firstBook.getImage();
-            String newFilePathStr = bookDir + File.separator + author + File.separator + title + File.separator + title + "-" + author + ".pdf";
-            File targetDir = new File(bookDir + File.separator + author + File.separator + title);
-            if (!targetDir.exists() && !targetDir.mkdirs()) {
-                log.warn("create target dir error {}", targetDir.getAbsolutePath());
-                return;
-            }
-            File newFile = new File(newFilePathStr);
-            moveFile(taskFile, newFile);
-            saveCoverImage(bookImageUrl, newFile);
-            writeJsonToFile(firstBook, newFile);
+        String bookDir = dirConfigProperties.bookDir();
+        List<BookInfo> bookInfoList = searchLoader.search(htmlParseProvider, fileName);
+        if (bookInfoList.isEmpty()) {
+            log.info("search book info isEmpty {}", bookInfoList);
+            return;
+        }
+        BookInfo firstBook = bookInfoList.getFirst();
+        String author = firstBook.getAuthor().getFirst();
+        String title = Optional.of(firstBook.getTitle()).orElse("");
+        String bookImageUrl = firstBook.getImage();
+        String newFilePathStr = bookDir + File.separator + author + File.separator + title + File.separator + title + "-" + author + ".pdf";
+        File targetDir = new File(bookDir + File.separator + author + File.separator + title);
+        if (!targetDir.exists() && !targetDir.mkdirs()) {
+            log.warn("create target dir error {}", targetDir.getAbsolutePath());
+            return;
+        }
+        File newFile = new File(newFilePathStr);
+        ThreadPoolUtil.execute(ThreadPoolType.FILE_RW_THREAD,()-> moveFile(taskFile, newFile));
+        ThreadPoolUtil.execute(ThreadPoolType.FILE_RW_THREAD,()-> saveCoverImage(bookImageUrl, newFile));
+        ThreadPoolUtil.execute(ThreadPoolType.FILE_RW_THREAD,()-> writeJsonToFile(firstBook, newFile));
+        ThreadPoolUtil.execute(ThreadPoolType.FILE_RW_THREAD,()-> {
             Gen<BookInfo> jsonGen = FileGenFactory.getFileGen("json");
             jsonGen.genFile(firstBook, newFile);
-        } catch (IOException e) {
-            log.error("file move error", e);
-        }
+        });
     }
 
     private String getImageFormat(String filePath) {
@@ -111,7 +111,8 @@ public class FileProcessTask extends FileProcess<BookInfo> {
         }
     }
 
-    private void saveCoverImage(String bookImageUrl, File newFile) throws IOException {
+    private void saveCoverImage(String bookImageUrl, File newFile) {
+        try {
         List<Byte> byteList = imageLoader.load((url, html) -> Collections.emptyList(), bookImageUrl);
         byte[] imageData = CommonUtils.byteArrayTran(byteList);
         // 将 byte[] 转换为 InputStream
@@ -125,11 +126,18 @@ public class FileProcessTask extends FileProcess<BookInfo> {
         File output = new File(filePath);
         // 将 BufferedImage 写入目标文件
         ImageIO.write(image, getImageFormat(filePath), output);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private void moveFile(File realFile, File newFile) throws IOException {
-        Path oldFilePath = Paths.get(realFile.getAbsolutePath());
-        Path newFilePath = Paths.get(newFile.getAbsolutePath());
-        Files.move(oldFilePath, newFilePath, StandardCopyOption.REPLACE_EXISTING);
+    private void moveFile(File realFile, File newFile)  {
+        try {
+            Path oldFilePath = Paths.get(realFile.getAbsolutePath());
+            Path newFilePath = Paths.get(newFile.getAbsolutePath());
+            Files.move(oldFilePath, newFilePath, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+           log.error("move file error", e);
+        }
     }
 }
