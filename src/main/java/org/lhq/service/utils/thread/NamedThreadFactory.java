@@ -22,6 +22,8 @@ public class NamedThreadFactory  implements ThreadFactory {
      */
     @Override
     public Thread newThread(Runnable task) {
-        return new Thread(task, namePrefix + "-" + threadNumber.getAndIncrement());
+        Thread thread = new Thread(task, namePrefix + "-" + threadNumber.getAndIncrement());
+        thread.setPriority(Thread.NORM_PRIORITY);
+        return  thread;
     }
 }

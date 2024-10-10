@@ -29,9 +29,6 @@ public class ThreadPoolUtil {
      */
     public static void execute(ThreadPoolType type, Runnable task) {
         ThreadPoolExecutor pool = getExecutor(type);
-        int poolSize = pool.getPoolSize();
-        log.info("the current pool size:{}" , poolSize);
-        log.info("the current task queue size:{}" , pool.getQueue().size());
         pool.execute(task);
     }
 
@@ -39,9 +36,6 @@ public class ThreadPoolUtil {
 
     public static <T> Future<T> submit(ThreadPoolType type, Callable<T> task){
         ThreadPoolExecutor pool = getExecutor(type);
-        int poolSize = pool.getPoolSize();
-        log.info("the current pool size:{}" , poolSize);
-        log.info("the current task queue size:{}" , pool.getQueue().size());
         return pool.submit(task);
     }
 
