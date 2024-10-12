@@ -3,6 +3,7 @@ package org.lhq.entity.book;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -37,4 +38,15 @@ public class BookInfo {
     private String ebookUrl;
     @JsonProperty("ebook_price")
     private String ebookPrice;
+
+
+    public BookVo toBookVo() {
+        BookVo bookVo = new BookVo();
+        bookVo.setId(this.id);
+        bookVo.setTitle(this.title);
+        bookVo.setAuthors(this.author);
+        bookVo.setPublishDate(LocalDate.parse(this.publishDate));
+        bookVo.setRating(Float.parseFloat(this.rating.get("average")));
+        return bookVo;
+    }
 }
