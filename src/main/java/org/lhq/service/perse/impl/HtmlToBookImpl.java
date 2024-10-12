@@ -1,13 +1,13 @@
 package org.lhq.service.perse.impl;
 
+import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
-import org.lhq.entity.BookInfo;
+import org.lhq.entity.book.BookInfo;
 import org.lhq.service.perse.HtmlParseProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,16 +21,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Singleton
+@Named("bookParser")
 public class HtmlToBookImpl implements HtmlParseProvider<BookInfo> {
     private static final Logger log = LoggerFactory.getLogger(HtmlToBookImpl.class);
     public static final Pattern ID_PATTERN = Pattern.compile(".*/subject/(\\d+)/?");
     private static final Pattern SERIES_PATTERN = Pattern.compile(".*/series/(\\d+)/?");
     private static final Pattern TAGS_PATTERN = Pattern.compile("criteria = '(.+)'");
     @Override
-    public BookInfo parse(String url, String html) {
+    public BookInfo parse(String url, Document doc) {
+        log.info("parse book info from url:{}", url);
         BookInfo bookInfo = new BookInfo();
-        Document doc = Jsoup.parse(html);
         Elements body = doc.select("body");
+        String html = doc.body().html();
         Element content = body.isEmpty() ? null : body.getFirst();
         // 提取书名
         Element titleElement = body.select("[property='v:itemreviewed']").getFirst();

@@ -13,3 +13,11 @@ douban:
     user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0
     proxy-image-url: true
     count: 5
+    person-detail-url: https://www.douban.com/personage/{id}/
+
+dir:
+  auto-scan-dir: C:/Users/lhq_h/Downloads
+  auto-scan-interval: 30
+  book-dir: E:/ai/
+  movie-dir: E:/迅雷下载/
+  ebook-extensions: [pdf, epub, mobi, txt]

@@ -24,12 +24,11 @@ public class HtmlToCelebrityImpl implements HtmlParseProvider<List<CelebrityInfo
      * 解析html
      *
      * @param url
-     * @param html
+     * @param document
      * @return T
      */
     @Override
-    public List<CelebrityInfo> parse(String url, String html) {
-        Document document = Jsoup.parse(html);
+    public List<CelebrityInfo> parse(String url, Document document) {
 
         Elements actorList = document.select(".celebrities-list .celebrity");
         List<CelebrityInfo> celebritiesVoList = new ArrayList<>();

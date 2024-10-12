@@ -35,10 +35,13 @@ val jsoupVersion: String by project
 val lombokVersion: String by project
 val commonsLang3Version: String by project
 val guavaVersion: String by project
+val quarkusLoggingLogbackVersion: String by project
+val jacksonDateFormatVersion: String by project
 
 dependencies {
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
     implementation("io.quarkus:quarkus-rest")
+    implementation("io.quarkiverse.logging.logback:quarkus-logging-logback:${quarkusLoggingLogbackVersion}")
     implementation("io.quarkus:quarkus-rest-jackson")
     implementation("io.quarkus:quarkus-config-yaml")
     implementation("io.quarkus:quarkus-smallrye-openapi")
@@ -48,6 +51,7 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:${commonsLang3Version}")
     implementation("com.google.guava:guava:${guavaVersion}")
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${jacksonDateFormatVersion}")
     testImplementation("io.quarkus:quarkus-junit5")
 }
 

@@ -1,30 +1,25 @@
 package org.lhq.controller;
 
 import io.vertx.core.http.HttpServerRequest;
-import jakarta.inject.Inject;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.UriBuilder;
-import org.apache.commons.lang3.StringUtils;
-import org.jboss.resteasy.reactive.common.jaxrs.UriBuilderImpl;
-import org.lhq.config.DoubanApiConfigProperties;
-import org.lhq.entity.BookInfo;
+import org.lhq.entity.book.BookInfo;
 import org.lhq.entity.HostInfo;
 import org.lhq.service.image.ImageProxy;
 import org.lhq.service.loader.EntityLoader;
 import org.lhq.service.loader.SearchLoader;
 import org.lhq.service.perse.HtmlParseProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.net.MalformedURLException;
 import java.util.List;
 
 @Path("/book")
+@Consumes({ MediaType.APPLICATION_JSON})
 public class BookApiController {
 
 
@@ -63,9 +58,10 @@ public class BookApiController {
 
     @GET
     @Path("search")
-    @Produces
-    public List<BookInfo> search(String keyword) {
-        return searchLoader.search(keyword);
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<BookInfo> search(@QueryParam("keyword") String keyword) {
+        return searchLoader.search(htmlParseProvider,keyword);
     }
+
 
 }

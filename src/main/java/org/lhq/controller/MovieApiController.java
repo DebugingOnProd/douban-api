@@ -1,13 +1,11 @@
 package org.lhq.controller;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.lhq.entity.CelebrityInfo;
 import org.lhq.entity.MovieInfo;
 import org.lhq.service.loader.EntityLoader;
+import org.lhq.service.loader.SearchLoader;
 import org.lhq.service.perse.HtmlParseProvider;
 
 import java.util.List;
@@ -18,15 +16,17 @@ public class MovieApiController {
     private final EntityLoader<List<CelebrityInfo>> celebrityLoader;
     private final HtmlParseProvider<MovieInfo> htmlParseProvider;
     private final HtmlParseProvider<List<CelebrityInfo>> htmlToCelebrityInfoProvider;
+    private final SearchLoader<MovieInfo> searchLoader;
 
     public MovieApiController(EntityLoader<MovieInfo> movieLoader,
                               EntityLoader<List<CelebrityInfo>> celebrityLoader,
                               HtmlParseProvider<MovieInfo> htmlParseProvider,
-                              HtmlParseProvider<List<CelebrityInfo>> htmlToCelebrityInfoProvider) {
+                              HtmlParseProvider<List<CelebrityInfo>> htmlToCelebrityInfoProvider, SearchLoader<MovieInfo> searchLoader) {
         this.movieLoader = movieLoader;
         this.celebrityLoader = celebrityLoader;
         this.htmlParseProvider = htmlParseProvider;
         this.htmlToCelebrityInfoProvider = htmlToCelebrityInfoProvider;
+        this.searchLoader = searchLoader;
     }
 
 
@@ -42,5 +42,13 @@ public class MovieApiController {
     @Produces(MediaType.APPLICATION_JSON)
     public List<CelebrityInfo> getMovieCast(@PathParam("id") String id) {
         return celebrityLoader.load(htmlToCelebrityInfoProvider,id);
+    }
+
+
+    @GET
+    @Path("search")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<MovieInfo> search(@QueryParam("keyword") String keyword) {
+        return searchLoader.search(htmlParseProvider,keyword);
     }
 }

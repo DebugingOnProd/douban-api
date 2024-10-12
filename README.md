@@ -4,6 +4,14 @@
 
 ## 使用 Quarkus 和 jsoup 封装的 豆瓣书籍和电影api
 
+
+### 运行环境
+#### Environment
+- jdk 21
+- quarkus 3.15.1
+- jsoup 1.18.1
+- gradle 8.9
+
 ### 目前已经抓取的接口有
 #### Interfaces that have been implemented
 
@@ -11,12 +19,14 @@
 - 电影详细信息 (/movie/{id})
 - 图片代理 (/imageProxy/view/cover)
 - 演员详细信息 (/movie/{id}/cast)
+- 书籍搜索 (/book/search)
+- 电影搜索 (/movie/search)
 
 ### 准备实现的接口
 #### Planned interfaces
 
-- 书籍搜索 (/book/search)
-- 电影搜索 (/movie/search)
+- 缓存接入
+- 本地书籍抓取分类
 
 ### 快速开始
 
