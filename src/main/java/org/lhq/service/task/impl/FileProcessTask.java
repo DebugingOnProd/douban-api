@@ -1,7 +1,5 @@
 package org.lhq.service.task.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.lhq.config.DirConfigProperties;
 import org.lhq.entity.book.BookInfo;
 import org.lhq.factory.FileGenFactory;
@@ -11,6 +9,7 @@ import org.lhq.service.perse.HtmlParseProvider;
 import org.lhq.service.task.FileProcess;
 import org.lhq.service.gen.Gen;
 import org.lhq.service.utils.CommonUtils;
+import org.lhq.service.utils.JsonUtils;
 import org.lhq.service.utils.thread.ThreadPoolType;
 import org.lhq.service.utils.thread.ThreadPoolUtil;
 import org.slf4j.Logger;
@@ -101,10 +100,7 @@ public class FileProcessTask extends FileProcess<BookInfo> {
         String path = parentFile.getPath();
         String filePath = path + File.separator + "metadata.json";
         try {
-            ObjectMapper objectMapper = new ObjectMapper()
-                    .enable(SerializationFeature.INDENT_OUTPUT)
-                    .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-            String jsonStr = objectMapper.writeValueAsString(bookInfo);
+            String jsonStr = Optional.ofNullable(JsonUtils.toJson(bookInfo)).orElse("");
             Files.write(Paths.get(filePath), jsonStr.getBytes());
             log.info("write json success {}", filePath);
         } catch (IOException e) {
