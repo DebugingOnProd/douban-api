@@ -41,7 +41,7 @@ public class CategorizedBookListening extends FileListening {
                 BookVo bookVo = bookInfo.toBookVo();
                 log.info("bookVo: {}", bookVo);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                log.error("fileReader error", e);
             }
         }
 
