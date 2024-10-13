@@ -5,7 +5,6 @@ import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -46,18 +45,19 @@ public class BookInfo {
 
 
     public BookVo toBookVo() {
-        log.info("BookInfo: {}", this);
         BookVo bookVo = new BookVo();
         bookVo.setId(this.id);
         bookVo.setTitle(this.title);
         bookVo.setAuthors(this.author);
         String trimDate = this.publishDate.trim();
-        LocalDate localDate = LocalDate.parse(trimDate, DateTimeFormatter.ofPattern("yyyy-M-d"));
-        bookVo.setPublishDate(localDate);
+        bookVo.setPublishDate(trimDate);
         String average = this.rating.get("average");
+        if (average.isBlank()) {
+            log.warn("average is null");
+            average = "0";
+        }
         float ratingFloat = Float.parseFloat(average);
         bookVo.setRating(ratingFloat);
-        log.info("BookVo: {}", bookVo);
         return bookVo;
     }
 }

@@ -10,6 +10,6 @@ public class BookVo {
     private String id;
     private String title;
     private List<String> authors;
-    private LocalDate publishDate;
+    private String publishDate;
     private Float rating;
 }
