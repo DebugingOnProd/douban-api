@@ -11,11 +11,14 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import org.lhq.entity.book.BookInfo;
 import org.lhq.entity.HostInfo;
+import org.lhq.entity.book.BookVo;
+import org.lhq.service.book.BookService;
 import org.lhq.service.image.ImageProxy;
 import org.lhq.service.loader.EntityLoader;
 import org.lhq.service.loader.SearchLoader;
 import org.lhq.service.perse.HtmlParseProvider;
 
+import java.util.Collections;
 import java.util.List;
 
 @Path("/book")
@@ -31,14 +34,17 @@ public class BookApiController {
 
     private final SearchLoader<BookInfo> searchLoader;
 
+    private final BookService bookService;
+
     public BookApiController(EntityLoader<BookInfo> bookLoader,
                              HtmlParseProvider<BookInfo> htmlParseProvider,
                              ImageProxy<BookInfo> imageProxy,
-                             SearchLoader<BookInfo> searchLoader) {
+                             SearchLoader<BookInfo> searchLoader, BookService bookService) {
         this.bookLoader = bookLoader;
         this.htmlParseProvider = htmlParseProvider;
         this.imageProxy = imageProxy;
         this.searchLoader = searchLoader;
+        this.bookService = bookService;
     }
 
     @Context
@@ -61,6 +67,13 @@ public class BookApiController {
     @Produces(MediaType.APPLICATION_JSON)
     public List<BookInfo> search(@QueryParam("keyword") String keyword) {
         return searchLoader.search(htmlParseProvider,keyword);
+    }
+
+    @GET
+    @Path("classified")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<BookVo> classifiedBookList() {
+        return bookService.getBookList();
     }
 
 

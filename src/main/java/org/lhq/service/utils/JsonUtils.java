@@ -3,6 +3,7 @@ package org.lhq.service.utils;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.List;
 
 public class JsonUtils {
 
@@ -73,4 +76,29 @@ public class JsonUtils {
             return null;
         }
     }
+
+
+    public static <T> List<T> readJsonToList(String json, Class<T> tClass){
+        try {
+            TypeFactory typeFactory = TypeFactory.defaultInstance();
+            return mapper.readValue(json, typeFactory.constructCollectionType(List.class, tClass));
+        }catch (IOException e) {
+            log.error("读取json文件时发生错误：",e);
+            return Collections.emptyList();
+        }
+    }
+
+
+
+    public static <T> List<T> readJsonToList(FileReader fileReader, Class<T> tClass){
+        try {
+            TypeFactory typeFactory = TypeFactory.defaultInstance();
+            return mapper.readValue(fileReader, typeFactory.constructCollectionType(List.class, tClass));
+        }catch (IOException e) {
+            log.error("读取json文件时发生错误：",e);
+            return Collections.emptyList();
+        }
+    }
+
+
 }

@@ -11,6 +11,7 @@ import org.lhq.entity.book.BookInfo;
 
 @Path("/cache")
 public class CacheController {
+
     private final CacheService<String, BookInfo> cacheService;
 
     public CacheController() {
