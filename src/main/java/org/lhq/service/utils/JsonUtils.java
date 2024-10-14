@@ -51,7 +51,6 @@ public class JsonUtils {
 
     public static String toJson(Object obj){
         try {
-            log.info("json序列化：{}",obj);
             return mapper.writeValueAsString(obj);
         } catch (Exception e) {
             log.error("json序列化出错：",e);

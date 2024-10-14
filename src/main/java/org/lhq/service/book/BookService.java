@@ -7,6 +7,7 @@ import org.lhq.service.utils.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collections;
@@ -26,7 +27,9 @@ public class BookService {
 
     public List<BookVo> getBookList() {
         String bookDir = dirConfigProperties.bookDir();
+        bookDir = bookDir + File.separator + "bookIndex.json";
         try (FileReader fileReader = new FileReader(bookDir)){
+            log.debug("bookDir:{}", bookDir);
             return JsonUtils.readJsonToList(fileReader, BookVo.class);
         } catch (IOException e) {
             log.error("bookDir not found", e);

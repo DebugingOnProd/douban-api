@@ -18,7 +18,6 @@ import org.lhq.service.loader.EntityLoader;
 import org.lhq.service.loader.SearchLoader;
 import org.lhq.service.perse.HtmlParseProvider;
 
-import java.util.Collections;
 import java.util.List;
 
 @Path("/book")
