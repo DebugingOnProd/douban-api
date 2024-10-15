@@ -11,4 +11,5 @@ public class BookVo {
     private List<String> authors;
     private String publishDate;
     private Float rating;
+    private String path;
 }

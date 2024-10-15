@@ -75,5 +75,12 @@ public class BookApiController {
         return bookService.getBookList();
     }
 
+    @GET
+    @Path("local/book/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<BookVo> getLocalBook(String id) {
+        return bookService.getBookList();
+    }
+
 
 }

@@ -42,6 +42,7 @@ public class CategorizedBookListening extends FileListening {
                 BookInfo bookInfo = JsonUtils.fromFileReader(fileReader, BookInfo.class);
                 bookInfo = Optional.ofNullable(bookInfo).orElse(new BookInfo());
                 BookVo bookVo = bookInfo.toBookVo();
+                bookVo.setPath(metadataJsonPath);
                 bookletList.add(bookVo);
             } catch (IOException e) {
                 log.warn("fileReader error", e);

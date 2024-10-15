@@ -2,6 +2,7 @@ package org.lhq.service.book;
 
 import jakarta.inject.Singleton;
 import org.lhq.config.DirConfigProperties;
+import org.lhq.entity.book.BookInfo;
 import org.lhq.entity.book.BookVo;
 import org.lhq.service.utils.JsonUtils;
 import org.slf4j.Logger;
@@ -28,12 +29,29 @@ public class BookService {
     public List<BookVo> getBookList() {
         String bookDir = dirConfigProperties.bookDir();
         bookDir = bookDir + File.separator + "bookIndex.json";
-        try (FileReader fileReader = new FileReader(bookDir)){
+        try (FileReader fileReader = new FileReader(bookDir)) {
             log.debug("bookDir:{}", bookDir);
             return JsonUtils.readJsonToList(fileReader, BookVo.class);
         } catch (IOException e) {
             log.error("bookDir not found", e);
         }
         return Collections.emptyList();
+    }
+
+
+    public BookInfo getBookInfo(String id) {
+        List<BookVo> bookList = getBookList();
+        BookVo exitsBook = bookList.stream()
+                .filter(bookVo -> bookVo.getId().equals(id))
+                .findFirst()
+                .orElse(new BookVo());
+        String path = exitsBook.getPath();
+        log.info("path:{}", path);
+        try (FileReader fileReader = new FileReader(path)) {
+            return JsonUtils.fromFileReader(fileReader, BookInfo.class);
+        } catch (IOException e) {
+            log.info("path not found", e);
+        }
+        return new BookInfo();
     }
 }
