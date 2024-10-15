@@ -11,15 +11,6 @@ public class NamedThreadFactory  implements ThreadFactory {
         this.namePrefix = namePrefix;
     }
 
-    /**
-     * Constructs a new unstarted {@code Thread} to run the given runnable.
-     *
-     * @param task a runnable to be executed by new thread instance
-     * @return constructed thread, or {@code null} if the request to
-     * create a thread is rejected
-     * @see <a href="../../lang/Thread.html#inheritance">Inheritance when
-     * creating threads</a>
-     */
     @Override
     public Thread newThread(Runnable task) {
         Thread thread = new Thread(task, namePrefix + "-" + threadNumber.getAndIncrement());
