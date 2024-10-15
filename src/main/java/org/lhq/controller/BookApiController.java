@@ -78,8 +78,8 @@ public class BookApiController {
     @GET
     @Path("local/book/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<BookVo> getLocalBook(String id) {
-        return bookService.getBookList();
+    public BookInfo getLocalBook(String id) {
+        return bookService.getBookInfo(id);
     }
 
 
