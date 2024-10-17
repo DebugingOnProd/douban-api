@@ -3,6 +3,7 @@ package org.lhq.controller;
 import io.vertx.core.http.HttpServerRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -80,6 +81,13 @@ public class BookApiController {
     @Produces(MediaType.APPLICATION_JSON)
     public BookInfo getLocalBook(String id) {
         return bookService.getBookInfo(id);
+    }
+
+    @POST
+    @Path("local/book/update")
+    @Produces(MediaType.APPLICATION_JSON)
+    public BookInfo updateBook(BookInfo bookInfo){
+        return bookService.updateBookInfoLocal(bookInfo);
     }
 
 

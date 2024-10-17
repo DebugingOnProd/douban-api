@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Singleton
 public class BookService {
@@ -53,5 +54,26 @@ public class BookService {
             log.info("path not found", e);
         }
         return new BookInfo();
+    }
+
+    public BookInfo updateBookInfoLocal(BookInfo bookInfo) {
+        List<BookVo> bookList = getBookList();
+        String id = bookInfo.getId();
+        bookList.stream()
+                .filter(bookVo -> bookVo.getId().equals(id))
+                .findFirst()
+                .ifPresent(bookVo -> {
+                    String path = bookVo.getPath();
+                    try (FileReader fileReader = new FileReader(path)) {
+                        BookInfo info = JsonUtils.fromFileReader(fileReader, BookInfo.class);
+                        Optional.ofNullable(info).ifPresent(item -> {
+                            item.setTitle(bookInfo.getTitle());
+                        });
+                        // 将修改后的文件写入回磁盘
+                    } catch (IOException e) {
+                        log.info("path not found", e);
+                    }
+                });
+        return null;
     }
 }
