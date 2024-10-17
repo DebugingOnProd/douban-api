@@ -69,6 +69,8 @@ public class BookService {
                         Optional.ofNullable(info).ifPresent(item -> {
                             Optional.ofNullable(bookInfo.getTitle())
                                     .ifPresent(item::setTitle);
+                            Optional.ofNullable(bookInfo.getProducer())
+                                    .ifPresent(item::setProducer);
                         });
                         // 将修改后的文件写入回磁盘
                     } catch (IOException e) {
