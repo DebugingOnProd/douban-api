@@ -67,7 +67,8 @@ public class BookService {
                     try (FileReader fileReader = new FileReader(path)) {
                         BookInfo info = JsonUtils.fromFileReader(fileReader, BookInfo.class);
                         Optional.ofNullable(info).ifPresent(item -> {
-                            item.setTitle(bookInfo.getTitle());
+                            Optional.ofNullable(bookInfo.getTitle())
+                                    .ifPresent(item::setTitle);
                         });
                         // 将修改后的文件写入回磁盘
                     } catch (IOException e) {
