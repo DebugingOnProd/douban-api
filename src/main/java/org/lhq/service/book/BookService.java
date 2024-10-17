@@ -71,6 +71,8 @@ public class BookService {
                                     .ifPresent(item::setTitle);
                             Optional.ofNullable(bookInfo.getProducer())
                                     .ifPresent(item::setProducer);
+                            Optional.ofNullable(bookInfo.getSummary())
+                                    .ifPresent(item::setSummary);
                         });
                         // 将修改后的文件写入回磁盘
                     } catch (IOException e) {
