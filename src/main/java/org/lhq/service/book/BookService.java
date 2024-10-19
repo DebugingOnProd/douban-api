@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -75,6 +77,9 @@ public class BookService {
                                     .ifPresent(item::setSummary);
                         });
                         // 将修改后的文件写入回磁盘
+                        String jsonStr = JsonUtils.toJson(info);
+                        jsonStr = Optional.ofNullable(jsonStr).orElse("");
+                        Files.write(Paths.get(path), jsonStr.getBytes());
                     } catch (IOException e) {
                         log.info("path not found", e);
                     }
