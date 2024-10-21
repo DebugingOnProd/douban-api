@@ -79,7 +79,7 @@ public class BookApiController {
     @GET
     @Path("local/book/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public BookInfo getLocalBook(String id) {
+    public BookInfo getLocalBook(@PathParam("id") String id) {
         return bookService.getBookInfo(id);
     }
 
