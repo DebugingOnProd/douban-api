@@ -37,8 +37,8 @@ public class BookService {
             return JsonUtils.readJsonToList(fileReader, BookVo.class);
         } catch (IOException e) {
             log.error("bookDir not found", e);
+            return Collections.emptyList();
         }
-        return Collections.emptyList();
     }
 
 
