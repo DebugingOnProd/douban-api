@@ -1,7 +1,6 @@
 package org.lhq.service.perse.impl;
 
 import jakarta.inject.Singleton;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;

@@ -2,13 +2,8 @@ package org.lhq.service.utils;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +13,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.List;
 
 public class JsonUtils {
 
@@ -42,6 +39,8 @@ public class JsonUtils {
                 return LocalDateTime.parse(p.getValueAsString(), DateTimeFormatter.ofPattern(pattern));
             }
         });
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         mapper.registerModule(javaTimeModule);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         log.info("JsonUtils config init success");
@@ -52,7 +51,6 @@ public class JsonUtils {
 
     public static String toJson(Object obj){
         try {
-            log.info("json序列化：{}",obj);
             return mapper.writeValueAsString(obj);
         } catch (Exception e) {
             log.error("json序列化出错：",e);
@@ -77,4 +75,29 @@ public class JsonUtils {
             return null;
         }
     }
+
+
+    public static <T> List<T> readJsonToList(String json, Class<T> tClass){
+        try {
+            TypeFactory typeFactory = TypeFactory.defaultInstance();
+            return mapper.readValue(json, typeFactory.constructCollectionType(List.class, tClass));
+        }catch (IOException e) {
+            log.error("读取json文件时发生错误：",e);
+            return Collections.emptyList();
+        }
+    }
+
+
+
+    public static <T> List<T> readJsonToList(FileReader fileReader, Class<T> tClass){
+        try {
+            TypeFactory typeFactory = TypeFactory.defaultInstance();
+            return mapper.readValue(fileReader, typeFactory.constructCollectionType(List.class, tClass));
+        }catch (IOException e) {
+            log.error("读取json文件时发生错误：",e);
+            return Collections.emptyList();
+        }
+    }
+
+
 }

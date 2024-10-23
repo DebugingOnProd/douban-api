@@ -21,7 +21,8 @@ public class MovieApiController {
     public MovieApiController(EntityLoader<MovieInfo> movieLoader,
                               EntityLoader<List<CelebrityInfo>> celebrityLoader,
                               HtmlParseProvider<MovieInfo> htmlParseProvider,
-                              HtmlParseProvider<List<CelebrityInfo>> htmlToCelebrityInfoProvider, SearchLoader<MovieInfo> searchLoader) {
+                              HtmlParseProvider<List<CelebrityInfo>> htmlToCelebrityInfoProvider,
+                              SearchLoader<MovieInfo> searchLoader) {
         this.movieLoader = movieLoader;
         this.celebrityLoader = celebrityLoader;
         this.htmlParseProvider = htmlParseProvider;

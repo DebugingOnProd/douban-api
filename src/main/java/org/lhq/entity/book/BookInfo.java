@@ -2,13 +2,15 @@ package org.lhq.entity.book;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
 @Data
 public class BookInfo {
+    private static final Logger log = LoggerFactory.getLogger(BookInfo.class);
     private String id;
     private String title;
     @JsonProperty("origin_title")
@@ -45,8 +47,16 @@ public class BookInfo {
         bookVo.setId(this.id);
         bookVo.setTitle(this.title);
         bookVo.setAuthors(this.author);
-        bookVo.setPublishDate(LocalDate.parse(this.publishDate));
-        bookVo.setRating(Float.parseFloat(this.rating.get("average")));
+        String trimDate = this.publishDate.trim();
+        bookVo.setPublishDate(trimDate);
+        String average = this.rating.get("average");
+        if (average.isBlank()) {
+            log.warn("average is null");
+            average = "0";
+        }
+        float ratingFloat = Float.parseFloat(average);
+        bookVo.setRating(ratingFloat);
+        bookVo.setSummary(this.summary);
         return bookVo;
     }
 }

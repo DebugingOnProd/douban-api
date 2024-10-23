@@ -3,6 +3,7 @@ package org.lhq.controller;
 import io.vertx.core.http.HttpServerRequest;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -11,6 +12,8 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import org.lhq.entity.book.BookInfo;
 import org.lhq.entity.HostInfo;
+import org.lhq.entity.book.BookVo;
+import org.lhq.service.book.BookService;
 import org.lhq.service.image.ImageProxy;
 import org.lhq.service.loader.EntityLoader;
 import org.lhq.service.loader.SearchLoader;
@@ -31,14 +34,17 @@ public class BookApiController {
 
     private final SearchLoader<BookInfo> searchLoader;
 
+    private final BookService bookService;
+
     public BookApiController(EntityLoader<BookInfo> bookLoader,
                              HtmlParseProvider<BookInfo> htmlParseProvider,
                              ImageProxy<BookInfo> imageProxy,
-                             SearchLoader<BookInfo> searchLoader) {
+                             SearchLoader<BookInfo> searchLoader, BookService bookService) {
         this.bookLoader = bookLoader;
         this.htmlParseProvider = htmlParseProvider;
         this.imageProxy = imageProxy;
         this.searchLoader = searchLoader;
+        this.bookService = bookService;
     }
 
     @Context
@@ -61,6 +67,34 @@ public class BookApiController {
     @Produces(MediaType.APPLICATION_JSON)
     public List<BookInfo> search(@QueryParam("keyword") String keyword) {
         return searchLoader.search(htmlParseProvider,keyword);
+    }
+
+    @GET
+    @Path("classified")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<BookVo> classifiedBookList() {
+        return bookService.getBookList();
+    }
+
+    @GET
+    @Path("local/book/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public BookInfo getLocalBook(@PathParam("id") String id) {
+        return bookService.getBookInfo(id);
+    }
+
+    @POST
+    @Path("local/book/update")
+    @Produces(MediaType.APPLICATION_JSON)
+    public BookInfo updateBook(BookInfo bookInfo){
+        return bookService.updateBookInfoLocal(bookInfo);
+    }
+
+    @GET
+    @Path("/local/{keyword}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<BookVo> searchBookLocal(@PathParam("keyword") String keyword){
+            return bookService.getBookListByKeyword(keyword);
     }
 
 

@@ -10,9 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,24 +29,34 @@ public class CategorizedBookListening extends FileListening {
 
     @Override
     public void process(Map<String, File> fileNameMap, BeanUtils beanUtils, DirConfigProperties dirConfigProperties) {
+        String bookDir = dirConfigProperties.bookDir();
         log.info("CategorizedBookListening process");
-        log.info("filaNameMap: {}", fileNameMap);
-        fileNameMap.forEach((name, value) -> log.info("fileName:{},filePath:{}", name, value));
+        fileNameMap.forEach((name, value) -> log.info("fileName:{}-------filePath:{}", name, value));
+        List<BookVo> bookletList = new ArrayList<>();
         for (Map.Entry<String, File> singleFileEntry : fileNameMap.entrySet()) {
             File file = singleFileEntry.getValue();
             String parent = file.getParent();
             String metadataJsonPath = parent + File.separator + "metadata.json";
+            log.info("metadataJsonPath:{}", metadataJsonPath);
             try (FileReader fileReader = new FileReader(metadataJsonPath)){
                 BookInfo bookInfo = JsonUtils.fromFileReader(fileReader, BookInfo.class);
                 bookInfo = Optional.ofNullable(bookInfo).orElse(new BookInfo());
-                log.info("bookInfo: {}", bookInfo);
                 BookVo bookVo = bookInfo.toBookVo();
-                log.info("bookVo: {}", bookVo);
+                bookVo.setPath(metadataJsonPath);
+                bookletList.add(bookVo);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                log.warn("fileReader error", e);
             }
         }
-
+        try {
+            log.info("bookletList: {}", bookletList);
+            String jsonStr = JsonUtils.toJson(bookletList);
+            jsonStr = Optional.ofNullable(jsonStr).orElse("");
+            String filePath = bookDir + File.separator + "bookIndex.json";
+            Files.write(Paths.get(filePath), jsonStr.getBytes());
+        } catch (IOException e) {
+            log.warn("write bookIndex.json error", e);
+        }
     }
 
     @Override
