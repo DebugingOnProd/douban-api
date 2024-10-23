@@ -8,6 +8,7 @@ import java.util.List;
 public class BookVo {
     private String id;
     private String title;
+    private String summary;
     private List<String> authors;
     private String publishDate;
     private Float rating;

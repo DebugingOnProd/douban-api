@@ -97,4 +97,23 @@ class BookServiceTest {
         log.info("bookVoList:{}", bookVoList);
         assertTrue(bookVoList.isEmpty(), "Expected book list to be empty");
     }
+
+
+    @Test
+    @DisplayName("Test getBookListByKeyword method with matching keyword")
+    void getBookListByKeyword_MatchingKeyword_ReturnsFilteredList() {
+        List<BookVo> bookVoList = bookService.getBookListByKeyword("Java");
+
+        assertFalse(bookVoList.isEmpty(), "Expected book list to be non-empty");
+        assertTrue(bookVoList.stream().allMatch(bookVo -> bookVo.getTitle().contains("Java") || bookVo.getSummary().contains("Java")),
+                "Expected all books in the list to contain the keyword in title or summary");
+    }
+
+    @Test
+    @DisplayName("Test getBookListByKeyword method with non-matching keyword")
+    void getBookListByKeyword_NonMatchingKeyword_ReturnsEmptyList() {
+        List<BookVo> bookVoList = bookService.getBookListByKeyword("NonExistentKeyword");
+
+        assertTrue(bookVoList.isEmpty(), "Expected book list to be empty");
+    }
 }

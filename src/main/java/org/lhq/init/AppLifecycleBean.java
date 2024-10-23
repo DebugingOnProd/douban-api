@@ -50,7 +50,7 @@ public class AppLifecycleBean {
         // 第一个参数是Runnable任务，第二个参数是首次执行的时间（延迟时间），第三个参数是周期时间，第四个参数是时间单位
         //executor.schedule(fileListeningTask, 5, TimeUnit.SECONDS);
         //这个任务定时扫描已经分类的书籍文件夹汇总成一个文件
-        // executor.scheduleAtFixedRate(categorizedBookListeningTask, 10,10, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(categorizedBookListeningTask, 10,10, TimeUnit.SECONDS);
 
 
 

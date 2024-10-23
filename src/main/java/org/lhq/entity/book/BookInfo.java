@@ -5,8 +5,6 @@ import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -58,6 +56,7 @@ public class BookInfo {
         }
         float ratingFloat = Float.parseFloat(average);
         bookVo.setRating(ratingFloat);
+        bookVo.setSummary(this.summary);
         return bookVo;
     }
 }

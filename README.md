@@ -28,6 +28,7 @@
 #### Planned interfaces
 
 - 缓存接入优化
+- 搜索书籍
 - xml和json格式的文件生成
 
 

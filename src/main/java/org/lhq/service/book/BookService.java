@@ -86,4 +86,17 @@ public class BookService {
                 });
         return null;
     }
+
+
+    public List<BookVo> getBookListByKeyword(String keyword) {
+        List<BookVo> bookList = getBookList();
+        return bookList.stream()
+                .filter(item -> {
+            boolean containsTitle = item.getTitle().contains(keyword);
+            boolean containsSummary = item.getSummary().contains(keyword);
+            return containsTitle || containsSummary;
+        }
+        ).toList();
+    }
+
 }

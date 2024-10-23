@@ -90,5 +90,12 @@ public class BookApiController {
         return bookService.updateBookInfoLocal(bookInfo);
     }
 
+    @GET
+    @Path("/local/{keyword}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<BookVo> searchBookLocal(@PathParam("keyword") String keyword){
+            return bookService.getBookListByKeyword(keyword);
+    }
+
 
 }
