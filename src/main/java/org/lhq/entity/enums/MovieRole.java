@@ -11,7 +11,7 @@ public enum MovieRole {
     COSTUME("服装"),
     OTHER("其他");
 
-    private String name;
+    private final String name;
 
     MovieRole(String name) {
         this.name = name;
