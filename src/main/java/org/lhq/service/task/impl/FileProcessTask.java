@@ -9,7 +9,6 @@ import org.lhq.service.perse.HtmlParseProvider;
 import org.lhq.service.task.FileProcess;
 import org.lhq.service.gen.Gen;
 import org.lhq.service.utils.CommonUtils;
-import org.lhq.service.utils.JsonUtils;
 import org.lhq.service.utils.thread.ThreadPoolType;
 import org.lhq.service.utils.thread.ThreadPoolUtil;
 import org.slf4j.Logger;
@@ -73,7 +72,6 @@ public class FileProcessTask extends FileProcess<BookInfo> {
         File newFile = new File(newFilePathStr);
         ThreadPoolUtil.execute(ThreadPoolType.FILE_RW_THREAD,()-> moveFile(taskFile, newFile));
         ThreadPoolUtil.execute(ThreadPoolType.FILE_RW_THREAD,()-> saveCoverImage(bookImageUrl, newFile));
-        ThreadPoolUtil.execute(ThreadPoolType.FILE_RW_THREAD,()-> writeJsonToFile(firstBook, newFile));
         ThreadPoolUtil.execute(ThreadPoolType.FILE_RW_THREAD,()-> {
             Gen<BookInfo> jsonGen = FileGenFactory.getFileGen("json");
             jsonGen.genFile(firstBook, newFile);
@@ -95,34 +93,22 @@ public class FileProcessTask extends FileProcess<BookInfo> {
         };
     }
 
-    private void writeJsonToFile(BookInfo bookInfo, File newFile) {
-        File parentFile = newFile.getParentFile();
-        String path = parentFile.getPath();
-        String filePath = path + File.separator + "metadata.json";
-        try {
-            String jsonStr = Optional.ofNullable(JsonUtils.toJson(bookInfo)).orElse("");
-            Files.write(Paths.get(filePath), jsonStr.getBytes());
-            log.info("write json success {}", filePath);
-        } catch (IOException e) {
-            log.error("write json error", e);
-        }
-    }
 
     private void saveCoverImage(String bookImageUrl, File newFile) {
         try {
-        List<Byte> byteList = imageLoader.load((url, html) -> Collections.emptyList(), bookImageUrl);
-        byte[] imageData = CommonUtils.byteArrayTran(byteList);
-        // 将 byte[] 转换为 InputStream
-        ByteArrayInputStream bis = new ByteArrayInputStream(imageData);
-        // 读取图片数据到 BufferedImage
-        BufferedImage image = ImageIO.read(bis);
-        File parentFile = newFile.getParentFile();
-        String path = parentFile.getPath();
-        String filePath = path + File.separator + "cover.jpg";
-        // 创建目标文件
-        File output = new File(filePath);
-        // 将 BufferedImage 写入目标文件
-        ImageIO.write(image, getImageFormat(filePath), output);
+            List<Byte> byteList = imageLoader.load((url, html) -> Collections.emptyList(), bookImageUrl);
+            byte[] imageData = CommonUtils.byteArrayTran(byteList);
+            // 将 byte[] 转换为 InputStream
+            ByteArrayInputStream bis = new ByteArrayInputStream(imageData);
+            // 读取图片数据到 BufferedImage
+            BufferedImage image = ImageIO.read(bis);
+            File parentFile = newFile.getParentFile();
+            String path = parentFile.getPath();
+            String filePath = path + File.separator + "cover.jpg";
+            // 创建目标文件
+            File output = new File(filePath);
+            // 将 BufferedImage 写入目标文件
+            ImageIO.write(image, getImageFormat(filePath), output);
         } catch (IOException e) {
             log.error("save cover image error", e);
         }

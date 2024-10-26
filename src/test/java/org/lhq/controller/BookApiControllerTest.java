@@ -2,7 +2,6 @@ package org.lhq.controller;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.response.Response;
-import io.restassured.response.ValidatableResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.lhq.entity.book.BookInfo;
@@ -13,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import java.io.InputStream;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @QuarkusTest
