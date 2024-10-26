@@ -2,9 +2,14 @@ package org.lhq.entity.book;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.lhq.entity.book.calibre.Creator;
+import org.lhq.entity.book.calibre.Identifier;
+import org.lhq.entity.book.calibre.Metadata;
+import org.lhq.entity.book.calibre.Package;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -58,5 +63,38 @@ public class BookInfo {
         bookVo.setRating(ratingFloat);
         bookVo.setSummary(this.summary);
         return bookVo;
+    }
+
+
+
+    public Package toPackage() {
+        Package result = new Package();
+        result.setXmlns("http://www.idpf.org/2007/opf");
+        result.setUniqueIdentifier("uuid_id");
+        result.setVersion("2.0");
+
+        Metadata metadata = new Metadata();
+        metadata.setTitle(this.title);
+        metadata.setPublisher(this.publisher);
+        metadata.setLanguage("zh-CN");
+        metadata.setDescription(this.summary);
+        metadata.setXmlnsOpf("http://www.idpf.org/2007/opf");
+        result.setMetadata(metadata);
+
+        List<Identifier> identifiers = new ArrayList<>();
+        Identifier calibre = new Identifier();
+        calibre.setId("calibre_id");
+        calibre.setScheme("calibre");
+        calibre.setValue(this.id);
+        identifiers.add(calibre);
+        metadata.setIdentifiers(identifiers);
+
+        Creator creator = new Creator();
+        creator.setValue(this.author.getFirst());
+        creator.setFileAs(this.author.getFirst());
+        creator.setRole("aut");
+        metadata.setCreator(creator);
+
+        return result;
     }
 }
