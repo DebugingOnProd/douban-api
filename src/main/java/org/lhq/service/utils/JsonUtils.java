@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
@@ -71,6 +72,16 @@ public class JsonUtils {
         try {
             return mapper.readValue(fileReader, tClass);
         } catch (IOException e) {
+            log.error("读取json文件时发生错误：",e);
+            return null;
+        }
+    }
+
+
+    public static <T> T readInputStreamToJson(InputStream inputStream, Class<T> tClass){
+        try {
+            return mapper.readValue(inputStream, tClass);
+        }catch (IOException e) {
             log.error("读取json文件时发生错误：",e);
             return null;
         }

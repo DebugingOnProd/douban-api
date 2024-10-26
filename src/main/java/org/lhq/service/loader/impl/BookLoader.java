@@ -57,7 +57,7 @@ public class BookLoader extends EntityLoader<BookInfo> implements SearchLoader<B
             return bookInfo;
         } catch (IOException e) {
             log.error("load book info error url:{}", url, e);
-            return null;
+            return new BookInfo();
         }
     }
 

@@ -33,6 +33,7 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${jacksonDateFormatVersion}")
     testImplementation("io.quarkus:quarkus-junit5")
+    testImplementation("io.rest-assured:rest-assured")
 }
 
 group = "org.lhq"
