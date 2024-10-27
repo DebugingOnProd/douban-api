@@ -3,11 +3,31 @@ import java.net.URI
 plugins {
     java
     id("io.quarkus")
+    id("maven-publish")
 }
 
 repositories {
     mavenCentral()
     mavenLocal()
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/DebugingOnProd/douban-api")
+
+            credentials {
+                username =  System.getenv("USERNAME")
+                password =  System.getenv("TOKEN")
+            }
+        }
+    }
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
 }
 
 val quarkusPlatformGroupId: String by project
@@ -54,6 +74,9 @@ tasks.withType<Test> {
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
     options.compilerArgs.add("-parameters")
+}
+tasks.withType<GenerateModuleMetadata> {
+    suppressedValidationErrors.add("enforced-platform")
 }
 
 data class RepositoryData(val name: String, val url: URI)
