@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 @QuarkusTest
@@ -93,16 +92,16 @@ class BookServiceTest {
             }
         };
         bookService = new BookService(dirConfigProperties);
-        List<BookVo> bookVoList = bookService.getBookList();
+        final List<BookVo> bookVoList = bookService.getBookList();
         log.info("bookVoList:{}", bookVoList);
         assertTrue(bookVoList.isEmpty(), "Expected book list to be empty");
     }
 
 
     @Test
-    @DisplayName("Test getBookListByKeyword method with matching keyword")
+    @DisplayName("Test_getBookListByKeyword_method_with_matching_keyword")
     void getBookListByKeyword_MatchingKeyword_ReturnsFilteredList() {
-        List<BookVo> bookVoList = bookService.getBookListByKeyword("Java");
+        final List<BookVo> bookVoList = bookService.getBookListByKeyword("Java");
 
         assertFalse(bookVoList.isEmpty(), "Expected book list to be non-empty");
         assertTrue(bookVoList.stream().allMatch(bookVo -> bookVo.getTitle().contains("Java") || bookVo.getSummary().contains("Java")),
@@ -110,9 +109,9 @@ class BookServiceTest {
     }
 
     @Test
-    @DisplayName("Test getBookListByKeyword method with non-matching keyword")
+    @DisplayName("Test_getBookListByKeyword_method_with_non-matching_keyword")
     void getBookListByKeyword_NonMatchingKeyword_ReturnsEmptyList() {
-        List<BookVo> bookVoList = bookService.getBookListByKeyword("NonExistentKeyword");
+        final List<BookVo> bookVoList = bookService.getBookListByKeyword("NonExistentKeyword");
 
         assertTrue(bookVoList.isEmpty(), "Expected book list to be empty");
     }

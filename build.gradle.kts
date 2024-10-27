@@ -1,3 +1,5 @@
+import java.net.URI
+
 plugins {
     java
     id("io.quarkus")
@@ -37,6 +39,7 @@ val commonsLang3Version: String by project
 val guavaVersion: String by project
 val quarkusLoggingLogbackVersion: String by project
 val jacksonDateFormatVersion: String by project
+val xstreamVersion: String by project
 
 dependencies {
     implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
@@ -50,9 +53,11 @@ dependencies {
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
     implementation("org.apache.commons:commons-lang3:${commonsLang3Version}")
     implementation("com.google.guava:guava:${guavaVersion}")
+    implementation("com.thoughtworks.xstream:xstream:${xstreamVersion}")
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${jacksonDateFormatVersion}")
     testImplementation("io.quarkus:quarkus-junit5")
+    testImplementation("io.rest-assured:rest-assured")
 }
 
 group = "org.lhq"
@@ -72,4 +77,15 @@ tasks.withType<JavaCompile> {
 }
 tasks.withType<GenerateModuleMetadata> {
     suppressedValidationErrors.add("enforced-platform")
+}
+
+data class RepositoryData(val name: String, val url: URI)
+
+tasks.register("showRepositories") {
+    val repositoryData = repositories.withType<MavenArtifactRepository>().map { RepositoryData(it.name, it.url) }
+    doLast {
+        repositoryData.forEach {
+            println("repository: ${it.name} ('${it.url}')")
+        }
+    }
 }
