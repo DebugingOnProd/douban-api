@@ -99,7 +99,7 @@ class BookServiceTest {
 
 
     @Test
-    @DisplayName("Test getBookListByKeyword method with matching keyword")
+    @DisplayName("Test_getBookListByKeyword_method_with_matching_keyword")
     void getBookListByKeyword_MatchingKeyword_ReturnsFilteredList() {
         final List<BookVo> bookVoList = bookService.getBookListByKeyword("Java");
 
@@ -109,7 +109,7 @@ class BookServiceTest {
     }
 
     @Test
-    @DisplayName("Test getBookListByKeyword method with non-matching keyword")
+    @DisplayName("Test_getBookListByKeyword_method_with_non-matching_keyword")
     void getBookListByKeyword_NonMatchingKeyword_ReturnsEmptyList() {
         final List<BookVo> bookVoList = bookService.getBookListByKeyword("NonExistentKeyword");
 
