@@ -12,8 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-public class GenJson implements Gen<BookInfo> {
-    private static final Logger log = LoggerFactory.getLogger(GenJson.class);
+public class GenBookInfoJson implements Gen<BookInfo> {
+    private static final Logger log = LoggerFactory.getLogger(GenBookInfoJson.class);
 
     @Override
     public void genFile(BookInfo bookInfo, File taskFile) {
