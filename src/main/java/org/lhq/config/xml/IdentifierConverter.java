@@ -25,7 +25,9 @@ public class IdentifierConverter implements Converter {
         if (source instanceof Identifier identifier) {
             log.info("marshal Identifier:{}", identifier);
             writer.addAttribute("opf:scheme", identifier.getScheme());
-            writer.addAttribute("id", identifier.getId());
+            if (identifier.getId() != null) {
+                writer.addAttribute("id", identifier.getId());
+            }
             writer.setValue(identifier.getValue());
         }
     }

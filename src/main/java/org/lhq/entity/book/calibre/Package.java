@@ -23,6 +23,6 @@ public class Package {
     @XStreamAlias("metadata")
     private Metadata metadata;
 
-    @XStreamImplicit(itemFieldName = "reference")
-    private List<Reference> guide;
+    @XStreamAlias("guide")
+    private Guide guide;
 }
