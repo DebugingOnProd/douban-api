@@ -48,7 +48,7 @@ public class AppLifecycleBean {
         FileListening categorizedBookListeningTask = new CategorizedBookListening(beanUtils, dirConfigProperties);
         // 安排定时任务
         // 第一个参数是Runnable任务，第二个参数是首次执行的时间（延迟时间），第三个参数是周期时间，第四个参数是时间单位
-        executor.scheduleAtFixedRate(fileListeningTask, 5, 100,TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(fileListeningTask, 5, 10,TimeUnit.SECONDS);
         //这个任务定时扫描已经分类的书籍文件夹汇总成一个文件
         executor.scheduleAtFixedRate(categorizedBookListeningTask, 10,10, TimeUnit.SECONDS);
 
