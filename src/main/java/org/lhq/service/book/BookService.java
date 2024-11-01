@@ -116,18 +116,19 @@ public class BookService {
                     Path parentPath = deletePath.getParent();
                     Path parent = parentPath.getParent();
                     log.info("parent path:{}", parent);
-                    if (Files.isDirectory(parent)) {
-                        try (Stream<Path> list = Files.list(parent)){
-                            // 递归删除目录
-                            this.deleteDirectoryRecursively(parentPath);
-                            boolean present = list.findAny().isPresent();
-                            if (!present) {
-                                log.info("delete parent path:{}", parent);
-                                Files.delete(parent);
-                            }
-                        } catch (IOException e) {
-                            log.error("delete path error", e);
+                    if (!Files.isDirectory(parent)) {
+                        return;
+                    }
+                    try (Stream<Path> list = Files.list(parent)){
+                        // 递归删除目录
+                        this.deleteDirectoryRecursively(parentPath);
+                        boolean present = list.findAny().isPresent();
+                        if (!present) {
+                            log.info("delete parent path:{}", parent);
+                            Files.delete(parent);
                         }
+                    } catch (IOException e) {
+                        log.error("delete path error", e);
                     }
                 });
         if (bookList.removeIf(item -> id.equals(item.getId()))) {
