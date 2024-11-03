@@ -13,4 +13,5 @@ public class BookVo {
     private String publishDate;
     private Float rating;
     private String path;
+    private String publisher;
 }

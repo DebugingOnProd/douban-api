@@ -65,6 +65,7 @@ public class BookInfo {
         float ratingFloat = Float.parseFloat(average);
         bookVo.setRating(ratingFloat);
         bookVo.setSummary(this.summary);
+        bookVo.setPublisher(this.publisher);
         return bookVo;
     }
 

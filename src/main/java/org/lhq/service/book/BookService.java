@@ -16,7 +16,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Singleton
@@ -154,6 +156,16 @@ public class BookService {
             }
         }
         Files.delete(path);
+    }
+
+
+
+    public Map<String, List<BookVo>> getAllPublisher() {
+        List<BookVo> bookList = getBookList();
+        return bookList.stream()
+                .collect(
+                        Collectors.groupingBy(BookVo::getPublisher)
+                );
     }
 
 }
