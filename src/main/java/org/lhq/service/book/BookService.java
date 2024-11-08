@@ -4,6 +4,7 @@ import jakarta.inject.Singleton;
 import org.lhq.config.DirConfigProperties;
 import org.lhq.entity.book.BookInfo;
 import org.lhq.entity.book.BookVo;
+import org.lhq.entity.book.IdPublisher;
 import org.lhq.service.utils.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,12 +161,16 @@ public class BookService {
 
 
 
-    public Map<String, List<BookVo>> getAllPublisher() {
+    public Map<String, List<IdPublisher>> getAllPublisher() {
         List<BookVo> bookList = getBookList();
         return bookList.stream()
-                .collect(
-                        Collectors.groupingBy(BookVo::getPublisher)
-                );
+                .map(item -> {
+                    IdPublisher idPublisher = new IdPublisher();
+                    idPublisher.setId(item.getId());
+                    idPublisher.setPublisher(item.getPublisher());
+                    return idPublisher;
+                })
+                .collect(Collectors.groupingBy(IdPublisher::getPublisher));
     }
 
 }

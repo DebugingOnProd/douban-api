@@ -7,6 +7,7 @@ import jakarta.ws.rs.core.MediaType;
 import org.lhq.entity.book.BookInfo;
 import org.lhq.entity.HostInfo;
 import org.lhq.entity.book.BookVo;
+import org.lhq.entity.book.IdPublisher;
 import org.lhq.service.book.BookService;
 import org.lhq.service.image.ImageProxy;
 import org.lhq.service.loader.EntityLoader;
@@ -14,6 +15,7 @@ import org.lhq.service.loader.SearchLoader;
 import org.lhq.service.perse.HtmlParseProvider;
 
 import java.util.List;
+import java.util.Map;
 
 @Path("/book")
 @Consumes({ MediaType.APPLICATION_JSON})
@@ -97,6 +99,13 @@ public class BookApiController {
     public String deleteLocalBook(@PathParam("id") String id){
         bookService.deleteLocalBook(id);
         return null;
+    }
+
+    @GET
+    @Path("publisher")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Map<String, List<IdPublisher>> getBookListByPublisher(){
+        return bookService.getAllPublisher();
     }
 
 
