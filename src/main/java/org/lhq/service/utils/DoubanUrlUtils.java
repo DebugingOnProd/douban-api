@@ -10,6 +10,7 @@ public class DoubanUrlUtils {
     public static final Pattern ID_PATTERN = Pattern.compile(".*/subject/(\\d+)/?");
 
 
+    private DoubanUrlUtils() {}
 
     /**
      * 解析url地址中的参数
