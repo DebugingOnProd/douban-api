@@ -19,14 +19,19 @@ public class GenBookInfoJson implements Gen<BookInfo> {
     public void genFile(BookInfo bookInfo, File taskFile) {
         log.info("开始生成json文件");
         File parentFile = taskFile.getParentFile();
-        String path = parentFile.getPath();
-        String filePath = path + File.separator + "metadata.json";
-        try {
-            String jsonStr = Optional.ofNullable(JsonUtils.toJson(bookInfo)).orElse("");
-            Files.write(Paths.get(filePath), jsonStr.getBytes());
-            log.info("write json success {}", filePath);
-        } catch (IOException e) {
-            log.error("write json error", e);
+        if (parentFile != null && !parentFile.exists()) {
+            String path = parentFile.getPath();
+            String filePath = path + File.separator + "metadata.json";
+            try {
+                String jsonStr = Optional.ofNullable(JsonUtils.toJson(bookInfo)).orElse("");
+                Files.write(Paths.get(filePath), jsonStr.getBytes());
+                log.info("write json success {}", filePath);
+            } catch (IOException e) {
+                log.error("write json error", e);
+            }
+        }else {
+            log.info("父目录不存在");
         }
+
     }
 }
