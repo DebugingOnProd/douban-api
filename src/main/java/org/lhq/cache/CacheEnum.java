@@ -7,7 +7,7 @@ public enum CacheEnum {
     INSTANCE;
 
 
-    private CacheService<String, BookInfo> bookCacheService;
+    private final CacheService<String, BookInfo> bookCacheService;
 
 
     CacheEnum() {

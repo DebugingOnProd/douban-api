@@ -46,6 +46,13 @@ public class BookApiController {
     @Context
     HttpServerRequest request;
 
+
+    /**
+     * 获取图书详情
+     * @param id 图书id 豆瓣id
+     * @return 图书详情
+     */
+
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
