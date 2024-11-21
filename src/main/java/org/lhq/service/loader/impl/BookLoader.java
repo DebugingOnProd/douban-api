@@ -101,7 +101,7 @@ public class BookLoader extends EntityLoader<BookInfo> implements SearchLoader<B
             try {
                 return item.get();
             } catch (InterruptedException | ExecutionException e) {
-                log.warn("search book info error", e);
+                log.error("search book info error", e);
                 return new BookInfo();
             }
         }).toList();
