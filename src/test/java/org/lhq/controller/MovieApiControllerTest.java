@@ -29,8 +29,8 @@ public class MovieApiControllerTest {
                 .get("movie/search");
         response.then().statusCode(200);
         MovieInfo[] movieInfos = response.as(MovieInfo[].class);
-        log.info("movieInfos:{}", movieInfos);
         List<MovieInfo> list = Arrays.asList(movieInfos);
+        log.info("movieInfos:{}", list);
         list.stream().findFirst().ifPresent(movieInfo -> {
             assertEquals("流浪地球2", movieInfo.getTitle());
         });
