@@ -36,4 +36,18 @@ public class MovieApiControllerTest {
         });
     }
 
+
+    @Test
+    @DisplayName("Get_Movie_Info_Test")
+    void getMovieInfoTest() throws Exception {
+        Response response = given()
+                .when()
+                .pathParam("id", "35267208")
+                .get("movie/{id}");
+        response.then().statusCode(200);
+        MovieInfo movieInfo = response.as(MovieInfo.class);
+        log.info("movieInfo:{}", movieInfo);
+        assertEquals("流浪地球2", movieInfo.getTitle());
+    }
+
 }
