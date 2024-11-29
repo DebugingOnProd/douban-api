@@ -4,6 +4,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.lhq.entity.CelebrityInfo;
 import org.lhq.entity.MovieInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,7 @@ public class MovieApiControllerTest {
 
     @Test
     @DisplayName("Get_Movie_Info_Test")
-    void getMovieInfoTest() throws Exception {
+    void getMovieInfoTest() {
         Response response = given()
                 .when()
                 .pathParam("id", "35267208")
@@ -48,6 +49,23 @@ public class MovieApiControllerTest {
         MovieInfo movieInfo = response.as(MovieInfo.class);
         log.info("movieInfo:{}", movieInfo);
         assertEquals("流浪地球2", movieInfo.getTitle());
+    }
+
+
+    @Test
+    @DisplayName("Get_Movie_Cast_Test")
+    void getMovieCastTest() {
+        Response response = given()
+                .when()
+                .pathParam("id", "35267208")
+                .get("movie/{id}/cast");
+        response.then().statusCode(200);
+        CelebrityInfo[] casts = response.as(CelebrityInfo[].class);
+        List<CelebrityInfo> list = Arrays.asList(casts);
+        log.info("list:{}", list);
+        list.stream().findFirst().ifPresent(celebrityInfo -> {
+            assertEquals("郭帆 Frant Gwo", celebrityInfo.getName());
+        });
     }
 
 }
