@@ -19,11 +19,12 @@ public class GenBookInfoJson implements Gen<BookInfo> {
     public void genFile(BookInfo bookInfo, File taskFile) {
         log.info("开始生成json文件");
         File parentFile = taskFile.getParentFile();
-        if (parentFile != null && !parentFile.exists()) {
+        if (parentFile != null ) {
             String path = parentFile.getPath();
             String filePath = path + File.separator + "metadata.json";
             try {
                 String jsonStr = Optional.ofNullable(JsonUtils.toJson(bookInfo)).orElse("");
+                log.info("filePath:{}", filePath);
                 Files.write(Paths.get(filePath), jsonStr.getBytes());
                 log.info("write json success {}", filePath);
             } catch (IOException e) {

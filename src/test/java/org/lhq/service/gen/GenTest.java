@@ -33,7 +33,7 @@ class GenTest {
         Gen<BookInfo> json = FileGenFactory.getFileGen("json");
         InputStream resourceAsStream = getClass().getResourceAsStream("/books/three_body.json");
         BookInfo bookInfo = JsonUtils.readInputStreamToJson(resourceAsStream, BookInfo.class);
-        File gentTestFile = new File("test.json");
+        File gentTestFile = new File("src/test/resources/books/bookIndex.json");
         json.genFile(bookInfo,gentTestFile);
         assertTrue(gentTestFile.exists());
     }

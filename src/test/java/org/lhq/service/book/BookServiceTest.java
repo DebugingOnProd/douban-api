@@ -61,11 +61,11 @@ class BookServiceTest {
     void getBookList_ValidJsonFile_ReturnsBookList() {
         List<BookVo> bookVoList = bookService.getBookList();
 
-        assertEquals(12, bookVoList.size(), "Expected book list size is 2");
+        assertEquals(14, bookVoList.size(), "Expected book list size is 2");
 
         BookVo bookVo = bookVoList.getFirst();
-        assertEquals("Kathy Sierra,Bert Bates 著", bookVo.getAuthors().getFirst(), "Expected author is testAuthor");
-        assertEquals("Head First Java（第二版·中文版）", bookVo.getTitle(), "Expected title is testBook");
+        assertEquals("当年明月", bookVo.getAuthors().getFirst(), "Expected author is testAuthor");
+        assertEquals("明朝那些事儿", bookVo.getTitle(), "Expected title is testBook");
     }
 
     @Test
