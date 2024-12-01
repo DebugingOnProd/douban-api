@@ -16,9 +16,9 @@ import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @QuarkusTest
-public class MovieApiControllerTest {
+class MovieApiControllerTest {
 
-    private static final Logger log = LoggerFactory.getLogger(BookApiControllerTest.class);
+    private static final Logger log = LoggerFactory.getLogger(MovieApiControllerTest.class);
 
 
     @Test
