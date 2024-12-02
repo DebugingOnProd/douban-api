@@ -40,6 +40,8 @@ class BookApiControllerTest {
         List<BookInfo> bookInfoList = Arrays.asList(bookInfos);
         log.info("{}", response.getBody().prettyPrint());
         bookInfoList.stream().findFirst().ifPresent(item -> assertEquals("三体", item.getTitle()));
-
     }
+
+
+
 }
