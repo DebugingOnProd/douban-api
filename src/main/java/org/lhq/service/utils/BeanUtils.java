@@ -3,6 +3,7 @@ package org.lhq.service.utils;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+import lombok.Getter;
 import org.lhq.config.DirConfigProperties;
 import org.lhq.entity.book.BookInfo;
 import org.lhq.entity.MovieInfo;
@@ -12,6 +13,7 @@ import org.lhq.service.perse.HtmlParseProvider;
 
 import java.util.List;
 
+@Getter
 @Singleton
 public class BeanUtils {
 
@@ -38,27 +40,4 @@ public class BeanUtils {
     @Inject
     DirConfigProperties dirConfigProperties;
 
-    public EntityLoader<BookInfo> getBookLoader() {
-        return bookLoader;
-    }
-
-    public EntityLoader<MovieInfo> getMovieLoader() {
-        return movieLoader;
-    }
-
-    public EntityLoader<List<Byte>> getImageLoader() {
-        return imageLoader;
-    }
-
-    public DirConfigProperties getDirConfigProperties() {
-        return dirConfigProperties;
-    }
-
-    public HtmlParseProvider<BookInfo> getHtmlToBookParser() {
-        return htmlToBookParser;
-    }
-
-    public SearchLoader<BookInfo> getSearchLoader() {
-        return searchLoader;
-    }
 }
