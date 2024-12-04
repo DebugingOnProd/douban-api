@@ -43,5 +43,14 @@ class BookApiControllerTest {
     }
 
 
+    @Test
+    @DisplayName("获取出版社列表")
+    void getPublisher() {
+        Response response = given().when().get("book/publisher");
+        response.then().statusCode(200);
+        log.info("{}", response.getBody().prettyPrint());
+    }
+
+
 
 }

@@ -21,3 +21,9 @@ dir:
   book-dir: ./
   movie-dir: ./
   ebook-extensions: [pdf, epub, mobi, txt]
+
+
+"%test":
+  dir:
+    auto-scan-dir: books
+    book-dir: src/test/resources/books
