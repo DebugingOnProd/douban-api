@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
-public class PersonApiControllerTest {
+class PersonApiControllerTest {
 
     private static final Logger log = LoggerFactory.getLogger(PersonApiControllerTest.class);
 

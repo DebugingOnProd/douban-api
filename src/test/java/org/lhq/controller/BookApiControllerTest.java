@@ -5,6 +5,7 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.lhq.entity.book.BookInfo;
+import org.lhq.entity.book.BookVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +51,21 @@ class BookApiControllerTest {
         response.then().statusCode(200);
         log.info("{}", response.getBody().prettyPrint());
     }
+
+    @Test
+    @DisplayName("获取本地图书信息")
+    void getLocalBook() {
+        Response response = given().when().get("book/local/三体");
+        response.then().statusCode(200);
+        BookVo[] bookVos = response.as(BookVo[].class);
+        log.info("{}", response.getBody().prettyPrint());
+        Arrays.stream(bookVos)
+                .findFirst()
+                .ifPresent(
+                        item -> assertEquals("三体全集", item.getTitle())
+                );
+    }
+
 
 
 
