@@ -66,6 +66,16 @@ class BookApiControllerTest {
                 );
     }
 
+    @Test
+    @DisplayName("获取本地图书")
+    void getLocalBookTest() {
+        Response response = given().when().get("/book/local/book/7163250");
+        response.then().statusCode(200);
+        log.info("{}", response.getBody().prettyPrint());
+        BookInfo resultBody = response.as(BookInfo.class);
+        assertEquals("明朝那些事儿", resultBody.getTitle());
+    }
+
 
 
 
