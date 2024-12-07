@@ -52,6 +52,11 @@ class BookServiceTest {
             public List<String> ebookExtensions() {
                 return List.of();
             }
+
+            @Override
+            public boolean autoScanEnabled() {
+                return false;
+            }
         };
         bookService = new BookService(dirConfigProperties);
     }
@@ -94,6 +99,11 @@ class BookServiceTest {
             @Override
             public List<String> ebookExtensions() {
                 return List.of();
+            }
+
+            @Override
+            public boolean autoScanEnabled() {
+                return false;
             }
         };
         bookService = new BookService(dirConfigProperties);
@@ -172,6 +182,11 @@ class BookServiceTest {
             @Override
             public List<String> ebookExtensions() {
                 return List.of();
+            }
+
+            @Override
+            public boolean autoScanEnabled() {
+                return false;
             }
         };
         bookService = new BookService(dirConfigProperties);
