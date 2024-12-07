@@ -21,6 +21,7 @@ dir:
   book-dir: ./
   movie-dir: ./
   ebook-extensions: [pdf, epub, mobi, txt]
+  auto-scan-enabled: false
 
 
 "%test":

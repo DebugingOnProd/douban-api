@@ -26,15 +26,14 @@ public class AppLifecycleBean {
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 
 
-
     private final DirConfigProperties dirConfigProperties;
 
 
     private final BeanUtils beanUtils;
 
     public AppLifecycleBean(
-                            DirConfigProperties dirConfigProperties,
-                            BeanUtils beanUtils) {
+            DirConfigProperties dirConfigProperties,
+            BeanUtils beanUtils) {
         this.dirConfigProperties = dirConfigProperties;
         this.beanUtils = beanUtils;
     }
@@ -46,23 +45,17 @@ public class AppLifecycleBean {
         if (interval == null || interval <= 0) {
             interval = 30;
         }
-        LOGGER.info("The auto scan interval is {} second", interval);
-        // 创建一个Runnable任务
-        FileListening fileListeningTask = new BookFileListeningTask(beanUtils,dirConfigProperties);
-        FileListening categorizedBookListeningTask = new CategorizedBookListening(beanUtils, dirConfigProperties);
-        // 安排定时任务
-        // 第一个参数是Runnable任务，第二个参数是首次执行的时间（延迟时间），第三个参数是周期时间，第四个参数是时间单位
-        executor.scheduleAtFixedRate(fileListeningTask, 5, interval,TimeUnit.SECONDS);
-        //这个任务定时扫描已经分类的书籍文件夹汇总成一个文件
-        executor.scheduleAtFixedRate(categorizedBookListeningTask, 10,10, TimeUnit.SECONDS);
-
-
-
-
-
-
-
-
+        if (dirConfigProperties.autoScanEnabled()) {
+            LOGGER.info("The auto scan interval is {} second", interval);
+            // 创建一个Runnable任务
+            FileListening fileListeningTask = new BookFileListeningTask(beanUtils, dirConfigProperties);
+            FileListening categorizedBookListeningTask = new CategorizedBookListening(beanUtils, dirConfigProperties);
+            // 安排定时任务
+            // 第一个参数是Runnable任务，第二个参数是首次执行的时间（延迟时间），第三个参数是周期时间，第四个参数是时间单位
+            executor.scheduleAtFixedRate(fileListeningTask, 5, interval, TimeUnit.SECONDS);
+            //这个任务定时扫描已经分类的书籍文件夹汇总成一个文件
+            executor.scheduleAtFixedRate(categorizedBookListeningTask, 10, 10, TimeUnit.SECONDS);
+        }
     }
 
     void onStop(@Observes ShutdownEvent ev) {
