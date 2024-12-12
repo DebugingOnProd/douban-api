@@ -16,4 +16,13 @@ class CacheControllerTest {
                 .then()
                 .statusCode(200);
     }
+
+    @Test
+    @DisplayName("test_cache_clear")
+    void testClear() {
+        given()
+                .when().get("/cache/clear")
+                .then()
+                .statusCode(200);
+    }
 }
