@@ -22,6 +22,9 @@ public class CacheController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public BookInfo get(@PathParam("key") String key) {
+        if (!cacheService.containsKey(key)) {
+            return null;
+        }
         return cacheService.get(key);
     }
 

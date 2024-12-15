@@ -25,4 +25,13 @@ class CacheControllerTest {
                 .then()
                 .statusCode(200);
     }
+
+    @Test
+    @DisplayName("test_cache_get")
+    void testGet() {
+        given()
+                .when().get("/cache/1222345")
+                .then()
+                .statusCode(204);
+    }
 }
