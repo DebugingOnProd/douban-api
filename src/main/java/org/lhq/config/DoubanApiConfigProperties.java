@@ -17,4 +17,5 @@ public interface DoubanApiConfigProperties {
     String userAgent();
     boolean proxyImageUrl();
     int count();
+    String cookie();
 }

@@ -9,10 +9,12 @@ import org.lhq.config.DoubanApiConfigProperties;
 import org.lhq.entity.PersonageInfo;
 import org.lhq.service.loader.EntityLoader;
 import org.lhq.service.perse.HtmlParseProvider;
+import org.lhq.service.utils.DoubanUrlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Singleton
 public class PersonLoader extends EntityLoader<PersonageInfo> {
@@ -27,9 +29,12 @@ public class PersonLoader extends EntityLoader<PersonageInfo> {
         TypeToken<PersonageInfo> typeToken = new TypeToken<>() {};
         String url = processUrl(typeToken, id);
         try {
+            String cookie = doubanApiConfigProperties.cookie();
+            Map<String, String> cookies = DoubanUrlUtils.getCookies(cookie);
             Connection.Response execute = Jsoup.connect(url)
                     .referrer(doubanApiConfigProperties.baseUrl())
                     .userAgent(doubanApiConfigProperties.userAgent())
+                    .cookies(cookies)
                     .execute();
             Document document = execute.parse();
             return htmlParseProvider.parse(url, document);

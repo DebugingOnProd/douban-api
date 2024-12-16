@@ -14,7 +14,7 @@ douban:
     proxy-image-url: true
     count: 5
     person-detail-url: https://www.douban.com/personage/{id}/
-
+    cookie:
 dir:
   auto-scan-dir: ./
   auto-scan-interval: 30
