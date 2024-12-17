@@ -45,11 +45,14 @@ public class BookLoader extends EntityLoader<BookInfo> implements SearchLoader<B
         if (cacheService.containsKeyAndNotExpired(url)) {
             return cacheService.get(url);
         }
+        String cookie = doubanApiConfigProperties.cookie();
+        Map<String, String> cookies = DoubanUrlUtils.getCookies(cookie);
         try {
             Connection.Response response = Jsoup.connect(url)
                     .referrer(doubanApiConfigProperties.baseUrl())
                     .userAgent(doubanApiConfigProperties.userAgent())
                     .ignoreContentType(true)
+                    .cookies(cookies)
                     .execute();
             Document htmlDoc = response.parse();
             BookInfo bookInfo = htmlParseProvider.parse(url, htmlDoc);
