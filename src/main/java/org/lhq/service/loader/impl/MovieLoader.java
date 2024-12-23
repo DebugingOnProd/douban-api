@@ -39,10 +39,14 @@ public class MovieLoader extends EntityLoader<MovieInfo> implements SearchLoader
     public MovieInfo load(HtmlParseProvider<MovieInfo> htmlParseProvider, String id) {
         TypeToken<MovieInfo> typeToken = new TypeToken<>(){};
         String url = processUrl(typeToken,id);
+        log.info("load movie info from url:{}", url);
+        String cookie = doubanApiConfigProperties.cookie();
+        Map<String, String> cookies = DoubanUrlUtils.getCookies(cookie);
         try {
             Connection.Response response = Jsoup.connect(url)
                     .referrer(doubanApiConfigProperties.baseUrl())
                     .userAgent(doubanApiConfigProperties.userAgent())
+                    .cookies(cookies)
                     .execute();
             return htmlParseProvider.parse(url,response.parse());
         } catch (IOException e) {
