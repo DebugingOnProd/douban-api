@@ -84,12 +84,15 @@ public class BookLoader extends EntityLoader<BookInfo> implements SearchLoader<B
                 String href = element.attr("href");
                 Map<String, String> map = DoubanUrlUtils.parseQuery(URI.create(href).getQuery());
                 String singleUrl = map.get("url");
+                String cookie = doubanApiConfigProperties.cookie();
+                Map<String, String> cookies = DoubanUrlUtils.getCookies(cookie);
                 if (DoubanUrlUtils.isBookUrl(singleUrl) && list.size() < doubanApiConfigProperties.count()) {
                     log.info("search book info from url:{}", singleUrl);
                     Future<BookInfo> bookInfoFutureTask = ThreadPoolUtil.submit(ThreadPoolType.NETWORK_REQUEST_THREAD, () -> {
                         Document htmlDocument = Jsoup.connect(singleUrl)
                                 .referrer(doubanApiConfigProperties.baseUrl())
                                 .userAgent(doubanApiConfigProperties.userAgent())
+                                .cookies(cookies)
                                 .ignoreContentType(true)
                                 .get();
                         return htmlParseProvider.parse(singleUrl, htmlDocument);

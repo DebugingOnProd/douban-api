@@ -2,7 +2,6 @@ package org.lhq.entity;
 
 
 import lombok.Data;
-import org.lhq.entity.enums.MovieRole;
 
 import java.time.LocalDate;
 
