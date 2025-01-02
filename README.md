@@ -23,6 +23,7 @@
 - 电影搜索 (/movie/search)
 - 定时扫描本地文件夹并分类书籍
 - 书籍原信息修改
+- 添加用户cookie支持
 
 ### 准备实现的接口
 #### Planned interfaces
@@ -42,6 +43,8 @@ quarkus build -Dquarkus.package.jar.type=uber-jar
 ```shell
 ./gradlew build -Dquarkus.package.jar.type=uber-jar
 ```
+
+- 默认端口为8080
 
 
 > **_提示:_**  Quarkus 现在附带了一个开发 UI，该 UI 仅在开发模式下可用，网址为 <http://localhost:8080/q/dev/>.
