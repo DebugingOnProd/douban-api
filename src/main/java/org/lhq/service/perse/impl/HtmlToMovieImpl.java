@@ -30,11 +30,19 @@ public class HtmlToMovieImpl implements HtmlParseProvider<MovieInfo> {
     @Override
     public MovieInfo parse(String url, Document document) {
         log.info("url:{}", url);
-        Elements htmlbody = document.select("body");
-        Element content = htmlbody.isEmpty() ? null : htmlbody.getFirst();
+        Elements htmlBody = document.select("body");
+        Element content = htmlBody.isEmpty() ? null : htmlBody.getFirst();
         String title = document.select("[property='v:itemreviewed']").text(); // title获取方式修改
         log.info("title:{}", title);
         MovieInfo movieVo = new MovieInfo();
+        String[] parts = url.split("/");
+        for (String part : parts) {
+            if (part.matches("\\d+")) {
+                movieVo.setId(part);
+                log.info("id:{}", part);
+                break;
+            }
+        }
         movieVo.setTitle(title);
         // 提取评分
         Element rating = document.selectFirst("strong.ll.rating_num");
