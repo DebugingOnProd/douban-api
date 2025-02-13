@@ -22,8 +22,19 @@ class GenTest {
         Gen<BookInfo> xml = FileGenFactory.getFileGen("xml");
         InputStream resourceAsStream = getClass().getResourceAsStream("/books/three_body.json");
         BookInfo bookInfo = JsonUtils.readInputStreamToJson(resourceAsStream, BookInfo.class);
-        File file = new File("/test.xml");
-        xml.genFile(bookInfo,file);
-        assertTrue(file.exists());
+        File gentTestFile = new File("test.xml");
+        xml.genFile(bookInfo,gentTestFile);
+        assertTrue(gentTestFile.exists());
+    }
+
+    @Test
+    @DisplayName("生成json file")
+    void genJson() {
+        Gen<BookInfo> json = FileGenFactory.getFileGen("json");
+        InputStream resourceAsStream = getClass().getResourceAsStream("/books/three_body.json");
+        BookInfo bookInfo = JsonUtils.readInputStreamToJson(resourceAsStream, BookInfo.class);
+        File gentTestFile = new File("src/test/resources/books/bookIndex.json");
+        json.genFile(bookInfo,gentTestFile);
+        assertTrue(gentTestFile.exists());
     }
 }

@@ -1,17 +1,11 @@
 package org.lhq.service.gen.impl;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
-import org.lhq.config.xml.CreatorConverter;
-import org.lhq.config.xml.IdentifierConverter;
-import org.lhq.entity.book.BookInfo;
-import org.lhq.entity.book.calibre.Identifier;
-import org.lhq.entity.book.calibre.Package;
-import org.lhq.service.gen.Gen;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.nio.file.Files;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -19,19 +13,28 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.*;
-import java.nio.file.Files;
 
-public class GenXml implements Gen<BookInfo> {
-    private static final Logger log = LoggerFactory.getLogger(GenXml.class);
+import org.lhq.config.xml.CreatorConverter;
+import org.lhq.config.xml.IdentifierConverter;
+import org.lhq.entity.book.BookInfo;
+import org.lhq.entity.book.calibre.Package;
+import org.lhq.service.gen.Gen;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
+
+public class GenBookInfoXml implements Gen<BookInfo> {
+    private static final Logger log = LoggerFactory.getLogger(GenBookInfoXml.class);
 
     @Override
     public void genFile(BookInfo bookInfo, File taskFile) {
         try {
-            // log.info("book info {}", bookInfo);
             Package aPackage = bookInfo.toPackage();
             XStream xStream = new XStream(new StaxDriver());
-            // xStream.alias("identifier", Identifier.class);
             xStream.registerConverter(new CreatorConverter());
             xStream.registerConverter(new IdentifierConverter());
             xStream.alias("package", Package.class);

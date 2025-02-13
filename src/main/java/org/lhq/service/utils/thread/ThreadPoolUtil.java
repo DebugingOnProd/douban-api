@@ -13,6 +13,9 @@ public class ThreadPoolUtil {
 
 
 
+    private ThreadPoolUtil () {}
+
+
     /**
      * 获取线程池实例
      * @param type 线程池类型

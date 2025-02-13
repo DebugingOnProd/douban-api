@@ -6,10 +6,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.lhq.config.DirConfigProperties;
 import org.lhq.entity.book.BookVo;
+import org.lhq.entity.book.IdPublisher;
+import org.lhq.service.utils.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 @QuarkusTest
@@ -47,6 +52,11 @@ class BookServiceTest {
             public List<String> ebookExtensions() {
                 return List.of();
             }
+
+            @Override
+            public boolean autoScanEnabled() {
+                return false;
+            }
         };
         bookService = new BookService(dirConfigProperties);
     }
@@ -56,11 +66,11 @@ class BookServiceTest {
     void getBookList_ValidJsonFile_ReturnsBookList() {
         List<BookVo> bookVoList = bookService.getBookList();
 
-        assertEquals(12, bookVoList.size(), "Expected book list size is 2");
+        assertEquals(14, bookVoList.size(), "Expected book list size is 2");
 
         BookVo bookVo = bookVoList.getFirst();
-        assertEquals("Kathy Sierra,Bert Bates 著", bookVo.getAuthors().getFirst(), "Expected author is testAuthor");
-        assertEquals("Head First Java（第二版·中文版）", bookVo.getTitle(), "Expected title is testBook");
+        assertEquals("当年明月", bookVo.getAuthors().getFirst(), "Expected author is testAuthor");
+        assertEquals("明朝那些事儿", bookVo.getTitle(), "Expected title is testBook");
     }
 
     @Test
@@ -90,6 +100,11 @@ class BookServiceTest {
             public List<String> ebookExtensions() {
                 return List.of();
             }
+
+            @Override
+            public boolean autoScanEnabled() {
+                return false;
+            }
         };
         bookService = new BookService(dirConfigProperties);
         final List<BookVo> bookVoList = bookService.getBookList();
@@ -114,5 +129,71 @@ class BookServiceTest {
         final List<BookVo> bookVoList = bookService.getBookListByKeyword("NonExistentKeyword");
 
         assertTrue(bookVoList.isEmpty(), "Expected book list to be empty");
+    }
+    @Test
+    @DisplayName("Test getAllPublisher method with valid bookIndex.json")
+    void getAllPublisher_ValidBookIndex_ReturnsGroupedPublishers() throws IOException {
+        // Mock the FileReader to return a valid JSON
+        String bookDir = BOOK_DIR + "bookIndex.json";
+        try (FileReader fileReader = new FileReader(bookDir)) {
+            List<BookVo> bookVoList = JsonUtils.readJsonToList(fileReader, BookVo.class);
+
+            Map<String, List<IdPublisher>> groupedPublishers = bookService.getAllPublisher();
+
+            assertNotNull(groupedPublishers, "Expected non-null result");
+            assertFalse(groupedPublishers.isEmpty(), "Expected non-empty result");
+
+            for (BookVo book : bookVoList) {
+                String publisher = book.getPublisher();
+                assertTrue(groupedPublishers.containsKey(publisher), "Expected publisher key in map");
+                List<IdPublisher> idPublishers = groupedPublishers.get(publisher);
+                assertTrue(idPublishers.stream().anyMatch(idPublisher -> idPublisher.getId().equals(book.getId())), "Expected book ID in the list");
+            }
+        }
+    }
+
+
+
+    @Test
+    @DisplayName("Test getAllPublisher method when bookIndex.json is not found")
+    void getAllPublisher_BookIndexNotFound_ReturnsEmptyMap() {
+        // set up a nonexistent directory to trigger IOException
+        DirConfigProperties dirConfigProperties = new DirConfigProperties() {
+            @Override
+            public String autoScanDir() {
+                return "";
+            }
+
+            @Override
+            public Integer autoScanInterval() {
+                return 0;
+            }
+
+            @Override
+            public String bookDir() {
+                return "src/test/resources/nonexistent/";
+            }
+
+            @Override
+            public String movieDir() {
+                return "";
+            }
+
+            @Override
+            public List<String> ebookExtensions() {
+                return List.of();
+            }
+
+            @Override
+            public boolean autoScanEnabled() {
+                return false;
+            }
+        };
+        bookService = new BookService(dirConfigProperties);
+
+        Map<String, List<IdPublisher>> groupedPublishers = bookService.getAllPublisher();
+
+        assertNotNull(groupedPublishers, "Expected non-null result");
+        assertTrue(groupedPublishers.isEmpty(), "Expected empty result");
     }
 }

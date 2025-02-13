@@ -1,18 +1,13 @@
 package org.lhq.controller;
 
 import io.vertx.core.http.HttpServerRequest;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import org.lhq.entity.book.BookInfo;
 import org.lhq.entity.HostInfo;
 import org.lhq.entity.book.BookVo;
+import org.lhq.entity.book.IdPublisher;
 import org.lhq.service.book.BookService;
 import org.lhq.service.image.ImageProxy;
 import org.lhq.service.loader.EntityLoader;
@@ -20,6 +15,7 @@ import org.lhq.service.loader.SearchLoader;
 import org.lhq.service.perse.HtmlParseProvider;
 
 import java.util.List;
+import java.util.Map;
 
 @Path("/book")
 @Consumes({ MediaType.APPLICATION_JSON})
@@ -49,6 +45,13 @@ public class BookApiController {
 
     @Context
     HttpServerRequest request;
+
+
+    /**
+     * 获取图书详情
+     * @param id 图书id 豆瓣id
+     * @return 图书详情
+     */
 
     @GET
     @Path("{id}")
@@ -95,6 +98,21 @@ public class BookApiController {
     @Produces(MediaType.APPLICATION_JSON)
     public List<BookVo> searchBookLocal(@PathParam("keyword") String keyword){
             return bookService.getBookListByKeyword(keyword);
+    }
+
+    @DELETE
+    @Path("delete/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deleteLocalBook(@PathParam("id") String id){
+        bookService.deleteLocalBook(id);
+        return null;
+    }
+
+    @GET
+    @Path("publisher")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Map<String, List<IdPublisher>> getBookListByPublisher(){
+        return bookService.getAllPublisher();
     }
 
 

@@ -14,10 +14,17 @@ douban:
     proxy-image-url: true
     count: 5
     person-detail-url: https://www.douban.com/personage/{id}/
-
+    cookie:
 dir:
-  auto-scan-dir: C:/Users/lhq_h/Downloads
+  auto-scan-dir: ./
   auto-scan-interval: 30
-  book-dir: E:/ai/
-  movie-dir: E:/迅雷下载/
+  book-dir: ./
+  movie-dir: ./
   ebook-extensions: [pdf, epub, mobi, txt]
+  auto-scan-enabled: false
+
+
+"%test":
+  dir:
+    auto-scan-dir: books
+    book-dir: src/test/resources/books

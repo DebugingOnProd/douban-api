@@ -11,4 +11,5 @@ public interface DirConfigProperties {
     String bookDir();
     String movieDir();
     List<String> ebookExtensions();
+    boolean autoScanEnabled();
 }

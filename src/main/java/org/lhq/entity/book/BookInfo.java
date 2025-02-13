@@ -3,9 +3,12 @@ package org.lhq.entity.book;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.lhq.entity.book.calibre.Creator;
+import org.lhq.entity.book.calibre.Guide;
 import org.lhq.entity.book.calibre.Identifier;
+import org.lhq.entity.book.calibre.Meta;
 import org.lhq.entity.book.calibre.Metadata;
 import org.lhq.entity.book.calibre.Package;
+import org.lhq.entity.book.calibre.Reference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +65,7 @@ public class BookInfo {
         float ratingFloat = Float.parseFloat(average);
         bookVo.setRating(ratingFloat);
         bookVo.setSummary(this.summary);
+        bookVo.setPublisher(this.publisher);
         return bookVo;
     }
 
@@ -87,6 +91,12 @@ public class BookInfo {
         calibre.setScheme("calibre");
         calibre.setValue(this.id);
         identifiers.add(calibre);
+
+
+        Identifier isbn = new Identifier();
+        isbn.setScheme("ISBN");
+        isbn.setValue(this.isbn13);
+        identifiers.add(isbn);
         metadata.setIdentifiers(identifiers);
 
         Creator creator = new Creator();
@@ -94,6 +104,23 @@ public class BookInfo {
         creator.setFileAs(this.author.getFirst());
         creator.setRole("aut");
         metadata.setCreator(creator);
+        List<String> tagList = this.tags.stream().map(m -> m.get("name")).toList();
+        metadata.setSubjects(tagList);
+
+        Reference reference = new Reference();
+        reference.setHref("cover.jpg");
+        reference.setTitle("封面");
+        reference.setType("cover");
+        List<Reference> guideList = List.of(reference);
+
+        Guide guide = new Guide();
+        guide.setReferences(guideList);
+        result.setGuide(guide);
+
+        Meta meta = new Meta();
+        meta.setName("calibre:rating");
+        meta.setContent(String.valueOf(this.rating.get("average")));
+        metadata.setMetas(List.of(meta));
 
         return result;
     }

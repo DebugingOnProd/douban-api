@@ -4,6 +4,7 @@ import jakarta.inject.Singleton;
 import org.lhq.config.DirConfigProperties;
 import org.lhq.entity.book.BookInfo;
 import org.lhq.entity.book.BookVo;
+import org.lhq.entity.book.IdPublisher;
 import org.lhq.service.utils.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,10 +13,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Singleton
 public class BookService {
@@ -97,6 +102,75 @@ public class BookService {
             return containsTitle || containsSummary;
         }
         ).toList();
+    }
+
+    public void deleteLocalBook(String id) {
+        if (id == null) {
+            return;
+        }
+        List<BookVo> bookList = getBookList();
+        bookList.stream()
+                .filter(item -> id.equals(item.getId()))
+                .findFirst()
+                .ifPresent(item -> {
+                    String path = item.getPath();
+                    log.info("delete path:{}", path);
+                    Path deletePath = Paths.get(path);
+                    Path parentPath = deletePath.getParent();
+                    Path parent = parentPath.getParent();
+                    log.info("parent path:{}", parent);
+                    if (!Files.isDirectory(parent)) {
+                        return;
+                    }
+                    try (Stream<Path> list = Files.list(parent)){
+                        // 递归删除目录
+                        this.deleteDirectoryRecursively(parentPath);
+                        boolean present = list.findAny().isPresent();
+                        if (!present) {
+                            log.info("delete parent path:{}", parent);
+                            Files.delete(parent);
+                        }
+                    } catch (IOException e) {
+                        log.error("delete path error", e);
+                    }
+                });
+        if (bookList.removeIf(item -> id.equals(item.getId()))) {
+            try {
+                String jsonStr = JsonUtils.toJson(bookList);
+                jsonStr = Optional.ofNullable(jsonStr).orElse("");
+                String bookDir = dirConfigProperties.bookDir();
+                String filePath = bookDir + File.separator + "bookIndex.json";
+                Files.write(Paths.get(filePath), jsonStr.getBytes());
+                log.info("delete book success  bookList:{}",bookList);
+            } catch (IOException e) {
+                log.error("write bookIndex.json error", e);
+            }
+        }
+    }
+
+    private void deleteDirectoryRecursively(Path path) throws IOException {
+        if (Files.isDirectory(path)) {
+            try (Stream<Path> entries = Files.list(path)) {
+                for (Path entry : entries.toList()) {
+                    deleteDirectoryRecursively(entry);
+                }
+            }
+        }
+        Files.delete(path);
+    }
+
+
+
+    public Map<String, List<IdPublisher>> getAllPublisher() {
+        List<BookVo> bookList = getBookList();
+        return bookList.stream()
+                .map(item -> {
+                    IdPublisher idPublisher = new IdPublisher();
+                    idPublisher.setId(item.getId());
+                    idPublisher.setPublisher(item.getPublisher());
+                    return idPublisher;
+                })
+                .collect(Collectors.groupingBy(IdPublisher::getPublisher));
     }
 
 }

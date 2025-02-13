@@ -39,3 +39,4 @@ nb-configuration.xml
 /.quarkus/cli/plugins/
 # TLS Certificates
 .certs/
+src/test/resources/books/metadata.json
