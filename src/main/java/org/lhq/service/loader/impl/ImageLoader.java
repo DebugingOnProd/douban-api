@@ -29,7 +29,7 @@ public class ImageLoader extends EntityLoader<List<Byte>> {
     public List<Byte> load(HtmlParseProvider<List<Byte>> htmlParseProvider, String imageUrl) {
         String baseUrl = doubanApiConfigProperties.baseUrl();
         String userAgent = doubanApiConfigProperties.userAgent();
-        String cookie = doubanApiConfigProperties.cookie();
+        String cookie = doubanApiConfigProperties.cookie().orElse("");
         Map<String, String> cookiesMap = DoubanUrlUtils.getCookies(cookie);
         try {
             Connection.Response response = Jsoup.connect(imageUrl)

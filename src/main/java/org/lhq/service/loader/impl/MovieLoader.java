@@ -40,7 +40,7 @@ public class MovieLoader extends EntityLoader<MovieInfo> implements SearchLoader
         TypeToken<MovieInfo> typeToken = new TypeToken<>(){};
         String url = processUrl(typeToken,id);
         log.info("load movie info from url:{}", url);
-        String cookie = doubanApiConfigProperties.cookie();
+        String cookie = doubanApiConfigProperties.cookie().orElse("");
         Map<String, String> cookies = DoubanUrlUtils.getCookies(cookie);
         try {
             Connection.Response response = Jsoup.connect(url)

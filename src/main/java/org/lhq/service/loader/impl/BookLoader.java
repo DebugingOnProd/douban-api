@@ -45,7 +45,7 @@ public class BookLoader extends EntityLoader<BookInfo> implements SearchLoader<B
         if (cacheService.containsKeyAndNotExpired(url)) {
             return cacheService.get(url);
         }
-        String cookie = doubanApiConfigProperties.cookie();
+        String cookie = doubanApiConfigProperties.cookie().orElse("");
         Map<String, String> cookies = DoubanUrlUtils.getCookies(cookie);
         try {
             Connection.Response response = Jsoup.connect(url)
@@ -84,7 +84,7 @@ public class BookLoader extends EntityLoader<BookInfo> implements SearchLoader<B
                 String href = element.attr("href");
                 Map<String, String> map = DoubanUrlUtils.parseQuery(URI.create(href).getQuery());
                 String singleUrl = map.get("url");
-                String cookie = doubanApiConfigProperties.cookie();
+                String cookie = doubanApiConfigProperties.cookie().orElse("");
                 Map<String, String> cookies = DoubanUrlUtils.getCookies(cookie);
                 if (DoubanUrlUtils.isBookUrl(singleUrl) && list.size() < doubanApiConfigProperties.count()) {
                     log.info("search book info from url:{}", singleUrl);

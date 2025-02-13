@@ -29,7 +29,7 @@ public class PersonLoader extends EntityLoader<PersonageInfo> {
         TypeToken<PersonageInfo> typeToken = new TypeToken<>() {};
         String url = processUrl(typeToken, id);
         try {
-            String cookie = doubanApiConfigProperties.cookie();
+            String cookie = doubanApiConfigProperties.cookie().orElse("");
             Map<String, String> cookies = DoubanUrlUtils.getCookies(cookie);
             Connection.Response execute = Jsoup.connect(url)
                     .referrer(doubanApiConfigProperties.baseUrl())
